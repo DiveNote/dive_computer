@@ -6,7 +6,10 @@ cmake_minimum_required(VERSION 3.10)
 project(dive_computer_library VERSION 0.0.1 LANGUAGES C)
 
 add_library(dive_computer SHARED
-  "dive_computer.c"
+  context.c
+  device.c
+  iterator.c
+  parser.c
 )
 
 set_target_properties(dive_computer PROPERTIES
