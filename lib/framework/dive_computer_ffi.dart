@@ -40,7 +40,7 @@ class DiveComputerFfi {
     } else if (Platform.isAndroid) {
       fileName = 'libdivecomputer.so';
     } else if (Platform.isMacOS) {
-      fileName = 'libdivecomputer.0.dylib';
+      fileName = 'libdivecomputer.dylib';
     } else {
       throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
     }

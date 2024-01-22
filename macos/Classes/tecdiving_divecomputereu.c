@@ -1,0 +1,1 @@
+#include "../../src/libdivecomputer/src/tecdiving_divecomputereu.c"

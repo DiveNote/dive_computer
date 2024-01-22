@@ -1,11 +1,16 @@
-// Relative import to be able to reuse the C sources.
-// See the comment in ../{projectName}}.podspec for more information.
 #include "../../src/libdivecomputer/src/context.c"
 #include "../../src/libdivecomputer/src/device.c"
 #include "../../src/libdivecomputer/src/iterator.c"
+#include "../../src/libdivecomputer/src/buffer.c"
+#include "../../src/libdivecomputer/src/descriptor.c"
+#include "../../src/libdivecomputer/src/iostream.c"
+#include "../../src/libdivecomputer/src/checksum.c"
+#include "../../src/libdivecomputer/src/ringbuffer.c"
+#include "../../src/libdivecomputer/src/rbstream.c"
+#include "../../src/libdivecomputer/src/common.c"
+#include "../../src/libdivecomputer/src/datetime.c"
+#include "../../src/libdivecomputer/src/packet.c"
+#include "../../src/libdivecomputer/src/aes.c"
+#include "../../src/libdivecomputer/src/platform.c"
+#include "../../src/libdivecomputer/src/timer.c"
 #include "../../src/libdivecomputer/src/parser.c"
-
-// #include "../../src/libdivecomputer/include/libdivecomputer/context.h"
-// #include "../../src/libdivecomputer/include/libdivecomputer/device.h"
-// #include "../../src/libdivecomputer/include/libdivecomputer/iterator.h"
-// #include "../../src/libdivecomputer/include/libdivecomputer/parser.h"
