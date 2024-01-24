@@ -114,7 +114,7 @@ add_library(dive_computer SHARED
 include_directories("libdivecomputer/include")
 
 set_target_properties(dive_computer PROPERTIES
-  # PUBLIC_HEADER dive_computer.h
+  PUBLIC_HEADER dive_computer.h
   OUTPUT_NAME "dive_computer"
 )
 

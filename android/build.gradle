@@ -54,5 +54,11 @@ android {
     defaultConfig {
         minSdkVersion 19
     }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
 }
 
