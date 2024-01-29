@@ -24,6 +24,8 @@ add_library(dive_computer SHARED
   "libdivecomputer/src/ihex.c"
   "libdivecomputer/src/timer.c"
   "libdivecomputer/src/parser.c"
+  "libdivecomputer/src/serial_posix.c"
+  "libdivecomputer/src/usb.c"
 
   "libdivecomputer/src/atomics_cobalt.c"
   "libdivecomputer/src/atomics_cobalt_parser.c"
