@@ -3,13 +3,14 @@ name: DiveComputerFfiBindings
 description: |
   Regenerate bindings with `flutter pub run ffigen --config ffigen.yaml`.
 output: 'lib/framework/dive_computer_ffi_bindings_generated.dart'
+compiler-opts: '-Isrc/libdivecomputer/include -Isrc/libdivecomputer/src'
 headers:
   entry-points:
-    - 'native/include/libdivecomputer/context.h'
-    - 'native/include/libdivecomputer/device.h'
-    - 'native/include/libdivecomputer/iterator.h'
-    - 'native/include/libdivecomputer/serial.h'
-    - 'native/include/libdivecomputer/parser.h'
+    - 'src/libdivecomputer/include/libdivecomputer/context.h'
+    - 'src/libdivecomputer/include/libdivecomputer/device.h'
+    - 'src/libdivecomputer/include/libdivecomputer/iterator.h'
+    - 'src/libdivecomputer/include/libdivecomputer/serial.h'
+    - 'src/libdivecomputer/include/libdivecomputer/parser.h'
 preamble: |
   // ignore_for_file: always_specify_types, unused_field, unused_element
   // ignore_for_file: camel_case_types

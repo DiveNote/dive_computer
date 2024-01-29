@@ -1,0 +1,1 @@
+#include "../../src/libdivecomputer/src/suunto_common2.c"

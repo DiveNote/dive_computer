@@ -306,163 +306,6 @@ class DiveComputerFfiBindings {
   late final _dc_descriptor_filter = _dc_descriptor_filterPtr.asFunction<
       int Function(ffi.Pointer<dc_descriptor_t>, int, ffi.Pointer<ffi.Void>)>();
 
-  void __va_start(
-    ffi.Pointer<va_list> arg0,
-  ) {
-    return ___va_start(
-      arg0,
-    );
-  }
-
-  late final ___va_startPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<va_list>)>>(
-          '__va_start');
-  late final ___va_start =
-      ___va_startPtr.asFunction<void Function(ffi.Pointer<va_list>)>();
-
-  void __security_init_cookie() {
-    return ___security_init_cookie();
-  }
-
-  late final ___security_init_cookiePtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>(
-          '__security_init_cookie');
-  late final ___security_init_cookie =
-      ___security_init_cookiePtr.asFunction<void Function()>();
-
-  void __security_check_cookie(
-    int _StackCookie,
-  ) {
-    return ___security_check_cookie(
-      _StackCookie,
-    );
-  }
-
-  late final ___security_check_cookiePtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.UintPtr)>>(
-          '__security_check_cookie');
-  late final ___security_check_cookie =
-      ___security_check_cookiePtr.asFunction<void Function(int)>();
-
-  void __report_gsfailure(
-    int _StackCookie,
-  ) {
-    return ___report_gsfailure(
-      _StackCookie,
-    );
-  }
-
-  late final ___report_gsfailurePtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.UintPtr)>>(
-          '__report_gsfailure');
-  late final ___report_gsfailure =
-      ___report_gsfailurePtr.asFunction<void Function(int)>();
-
-  late final ffi.Pointer<ffi.UintPtr> ___security_cookie =
-      _lookup<ffi.UintPtr>('__security_cookie');
-
-  int get __security_cookie => ___security_cookie.value;
-
-  set __security_cookie(int value) => ___security_cookie.value = value;
-
-  void _invalid_parameter_noinfo() {
-    return __invalid_parameter_noinfo();
-  }
-
-  late final __invalid_parameter_noinfoPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>(
-          '_invalid_parameter_noinfo');
-  late final __invalid_parameter_noinfo =
-      __invalid_parameter_noinfoPtr.asFunction<void Function()>();
-
-  void _invalid_parameter_noinfo_noreturn() {
-    return __invalid_parameter_noinfo_noreturn();
-  }
-
-  late final __invalid_parameter_noinfo_noreturnPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>(
-          '_invalid_parameter_noinfo_noreturn');
-  late final __invalid_parameter_noinfo_noreturn =
-      __invalid_parameter_noinfo_noreturnPtr.asFunction<void Function()>();
-
-  void _invoke_watson(
-    ffi.Pointer<ffi.WChar> _Expression,
-    ffi.Pointer<ffi.WChar> _FunctionName,
-    ffi.Pointer<ffi.WChar> _FileName,
-    int _LineNo,
-    int _Reserved,
-  ) {
-    return __invoke_watson(
-      _Expression,
-      _FunctionName,
-      _FileName,
-      _LineNo,
-      _Reserved,
-    );
-  }
-
-  late final __invoke_watsonPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.WChar>,
-              ffi.Pointer<ffi.WChar>,
-              ffi.Pointer<ffi.WChar>,
-              ffi.UnsignedInt,
-              ffi.UintPtr)>>('_invoke_watson');
-  late final __invoke_watson = __invoke_watsonPtr.asFunction<
-      void Function(ffi.Pointer<ffi.WChar>, ffi.Pointer<ffi.WChar>,
-          ffi.Pointer<ffi.WChar>, int, int)>();
-
-  ffi.Pointer<ffi.Int> _errno() {
-    return __errno();
-  }
-
-  late final __errnoPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Int> Function()>>('_errno');
-  late final __errno = __errnoPtr.asFunction<ffi.Pointer<ffi.Int> Function()>();
-
-  int _set_errno(
-    int _Value,
-  ) {
-    return __set_errno(
-      _Value,
-    );
-  }
-
-  late final __set_errnoPtr =
-      _lookup<ffi.NativeFunction<errno_t Function(ffi.Int)>>('_set_errno');
-  late final __set_errno = __set_errnoPtr.asFunction<int Function(int)>();
-
-  int _get_errno(
-    ffi.Pointer<ffi.Int> _Value,
-  ) {
-    return __get_errno(
-      _Value,
-    );
-  }
-
-  late final __get_errnoPtr =
-      _lookup<ffi.NativeFunction<errno_t Function(ffi.Pointer<ffi.Int>)>>(
-          '_get_errno');
-  late final __get_errno =
-      __get_errnoPtr.asFunction<int Function(ffi.Pointer<ffi.Int>)>();
-
-  int __threadid() {
-    return ___threadid();
-  }
-
-  late final ___threadidPtr =
-      _lookup<ffi.NativeFunction<ffi.UnsignedLong Function()>>('__threadid');
-  late final ___threadid = ___threadidPtr.asFunction<int Function()>();
-
-  int __threadhandle() {
-    return ___threadhandle();
-  }
-
-  late final ___threadhandlePtr =
-      _lookup<ffi.NativeFunction<ffi.UintPtr Function()>>('__threadhandle');
-  late final ___threadhandle = ___threadhandlePtr.asFunction<int Function()>();
-
   /// Get the transport type.
   ///
   /// @param[in]  iostream  A valid I/O stream.
@@ -1823,41 +1666,102 @@ final class dc_iterator_t extends ffi.Opaque {}
 
 final class dc_descriptor_t extends ffi.Opaque {}
 
-typedef va_list = ffi.Pointer<ffi.Char>;
+/// mbstate_t is an opaque object to keep conversion state, during multibyte
+/// stream conversions.  The content must not be referenced by user programs.
+final class __mbstate_t extends ffi.Union {
+  @ffi.Array.multi([128])
+  external ffi.Array<ffi.Char> __mbstate8;
 
-final class __crt_locale_data_public extends ffi.Struct {
-  external ffi.Pointer<ffi.UnsignedShort> _locale_pctype;
-
-  @ffi.Int()
-  external int _locale_mb_cur_max;
-
-  @ffi.UnsignedInt()
-  external int _locale_lc_codepage;
+  /// for alignment
+  @ffi.LongLong()
+  external int _mbstateL;
 }
 
-final class __crt_locale_pointers extends ffi.Struct {
-  external ffi.Pointer<__crt_locale_data> locinfo;
+final class __darwin_pthread_handler_rec extends ffi.Struct {
+  /// Routine to call
+  external ffi
+      .Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+      __routine;
 
-  external ffi.Pointer<__crt_multibyte_data> mbcinfo;
+  /// Argument to pass
+  external ffi.Pointer<ffi.Void> __arg;
+
+  external ffi.Pointer<__darwin_pthread_handler_rec> __next;
 }
 
-final class __crt_locale_data extends ffi.Opaque {}
+final class _opaque_pthread_attr_t extends ffi.Struct {
+  @ffi.Long()
+  external int __sig;
 
-final class __crt_multibyte_data extends ffi.Opaque {}
-
-final class _Mbstatet extends ffi.Struct {
-  @ffi.UnsignedLong()
-  external int _Wchar;
-
-  @ffi.UnsignedShort()
-  external int _Byte;
-
-  @ffi.UnsignedShort()
-  external int _State;
+  @ffi.Array.multi([56])
+  external ffi.Array<ffi.Char> __opaque;
 }
 
-typedef errno_t = ffi.Int;
-typedef Darterrno_t = int;
+final class _opaque_pthread_cond_t extends ffi.Struct {
+  @ffi.Long()
+  external int __sig;
+
+  @ffi.Array.multi([40])
+  external ffi.Array<ffi.Char> __opaque;
+}
+
+final class _opaque_pthread_condattr_t extends ffi.Struct {
+  @ffi.Long()
+  external int __sig;
+
+  @ffi.Array.multi([8])
+  external ffi.Array<ffi.Char> __opaque;
+}
+
+final class _opaque_pthread_mutex_t extends ffi.Struct {
+  @ffi.Long()
+  external int __sig;
+
+  @ffi.Array.multi([56])
+  external ffi.Array<ffi.Char> __opaque;
+}
+
+final class _opaque_pthread_mutexattr_t extends ffi.Struct {
+  @ffi.Long()
+  external int __sig;
+
+  @ffi.Array.multi([8])
+  external ffi.Array<ffi.Char> __opaque;
+}
+
+final class _opaque_pthread_once_t extends ffi.Struct {
+  @ffi.Long()
+  external int __sig;
+
+  @ffi.Array.multi([8])
+  external ffi.Array<ffi.Char> __opaque;
+}
+
+final class _opaque_pthread_rwlock_t extends ffi.Struct {
+  @ffi.Long()
+  external int __sig;
+
+  @ffi.Array.multi([192])
+  external ffi.Array<ffi.Char> __opaque;
+}
+
+final class _opaque_pthread_rwlockattr_t extends ffi.Struct {
+  @ffi.Long()
+  external int __sig;
+
+  @ffi.Array.multi([16])
+  external ffi.Array<ffi.Char> __opaque;
+}
+
+final class _opaque_pthread_t extends ffi.Struct {
+  @ffi.Long()
+  external int __sig;
+
+  external ffi.Pointer<__darwin_pthread_handler_rec> __cleanup_stack;
+
+  @ffi.Array.multi([8176])
+  external ffi.Array<ffi.Char> __opaque;
+}
 
 final class dc_iostream_t extends ffi.Opaque {}
 
@@ -2379,139 +2283,305 @@ typedef dc_sample_callback_tFunction = ffi.Void Function(ffi.Int32 type,
 typedef Dartdc_sample_callback_tFunction = void Function(int type,
     ffi.Pointer<dc_sample_value_t> value, ffi.Pointer<ffi.Void> userdata);
 
-const int _VCRT_COMPILER_PREPROCESSOR = 1;
+const int __DARWIN_ONLY_64_BIT_INO_T = 1;
 
-const int _SAL_VERSION = 20;
+const int __DARWIN_ONLY_UNIX_CONFORMANCE = 1;
 
-const int __SAL_H_VERSION = 180000000;
+const int __DARWIN_ONLY_VERS_1050 = 1;
 
-const int _USE_DECLSPECS_FOR_SAL = 0;
+const int __DARWIN_UNIX03 = 1;
 
-const int _USE_ATTRIBUTES_FOR_SAL = 0;
+const int __DARWIN_64_BIT_INO_T = 1;
 
-const int _CRT_PACKING = 8;
+const int __DARWIN_VERS_1050 = 1;
 
-const int _VCRUNTIME_DISABLED_WARNINGS = 4514;
+const int __DARWIN_NON_CANCELABLE = 0;
 
-const int _HAS_EXCEPTIONS = 1;
+const String __DARWIN_SUF_EXTSN = '\$DARWIN_EXTSN';
 
-const int _WCHAR_T_DEFINED = 1;
+const int __DARWIN_C_ANSI = 4096;
+
+const int __DARWIN_C_FULL = 900000;
+
+const int __DARWIN_C_LEVEL = 900000;
+
+const int __STDC_WANT_LIB_EXT1__ = 1;
+
+const int __DARWIN_NO_LONG_LONG = 0;
+
+const int _DARWIN_FEATURE_64_BIT_INODE = 1;
+
+const int _DARWIN_FEATURE_ONLY_64_BIT_INODE = 1;
+
+const int _DARWIN_FEATURE_ONLY_VERS_1050 = 1;
+
+const int _DARWIN_FEATURE_ONLY_UNIX_CONFORMANCE = 1;
+
+const int _DARWIN_FEATURE_UNIX_CONFORMANCE = 3;
+
+const int __has_ptrcheck = 0;
+
+const int __DARWIN_NULL = 0;
+
+const int __PTHREAD_SIZE__ = 8176;
+
+const int __PTHREAD_ATTR_SIZE__ = 56;
+
+const int __PTHREAD_MUTEXATTR_SIZE__ = 8;
+
+const int __PTHREAD_MUTEX_SIZE__ = 56;
+
+const int __PTHREAD_CONDATTR_SIZE__ = 8;
+
+const int __PTHREAD_COND_SIZE__ = 40;
+
+const int __PTHREAD_ONCE_SIZE__ = 8;
+
+const int __PTHREAD_RWLOCK_SIZE__ = 192;
+
+const int __PTHREAD_RWLOCKATTR_SIZE__ = 16;
+
+const int __DARWIN_WCHAR_MAX = 2147483647;
+
+const int __DARWIN_WCHAR_MIN = -2147483648;
+
+const int __DARWIN_WEOF = -1;
+
+const int _FORTIFY_SOURCE = 2;
 
 const int NULL = 0;
 
-const int _HAS_CXX17 = 0;
+const int USER_ADDR_NULL = 0;
 
-const int _HAS_CXX20 = 0;
+const int __DARWIN_CLK_TCK = 100;
 
-const int _HAS_CXX23 = 0;
+const int MB_LEN_MAX = 6;
 
-const int _HAS_NODISCARD = 1;
-
-const int _UCRT_DISABLED_WARNINGS = 4324;
-
-const int _ARGMAX = 100;
-
-const int _TRUNCATE = -1;
-
-const int _CRT_INT_MAX = 2147483647;
-
-const int _CRT_SIZE_MAX = -1;
-
-const String __FILEW__ = 'C';
-
-const int _CRT_FUNCTIONS_REQUIRED = 1;
-
-const int _CRT_HAS_CXX17 = 0;
-
-const int _ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE = 1;
-
-const int _CRT_BUILD_DESKTOP_APP = 1;
-
-const int _CRT_INTERNAL_NONSTDC_NAMES = 1;
-
-const int __STDC_SECURE_LIB__ = 200411;
-
-const int __GOT_SECURE_LIB__ = 200411;
-
-const int __STDC_WANT_SECURE_LIB__ = 1;
-
-const int _SECURECRT_FILL_BUFFER_PATTERN = 254;
-
-const int _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES = 0;
-
-const int _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES_COUNT = 0;
-
-const int _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES = 1;
-
-const int _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES_MEMORY = 0;
-
-const int _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES_MEMORY = 0;
+const int CLK_TCK = 100;
 
 const int CHAR_BIT = 8;
 
-const int SCHAR_MIN = -128;
-
 const int SCHAR_MAX = 127;
+
+const int SCHAR_MIN = -128;
 
 const int UCHAR_MAX = 255;
 
-const int CHAR_MIN = -128;
-
 const int CHAR_MAX = 127;
 
-const int MB_LEN_MAX = 5;
-
-const int SHRT_MIN = -32768;
-
-const int SHRT_MAX = 32767;
+const int CHAR_MIN = -128;
 
 const int USHRT_MAX = 65535;
 
-const int INT_MIN = -2147483648;
+const int SHRT_MAX = 32767;
 
-const int INT_MAX = 2147483647;
+const int SHRT_MIN = -32768;
 
 const int UINT_MAX = 4294967295;
 
-const int LONG_MIN = -2147483648;
+const int INT_MAX = 2147483647;
 
-const int LONG_MAX = 2147483647;
+const int INT_MIN = -2147483648;
 
-const int ULONG_MAX = 4294967295;
+const int ULONG_MAX = -1;
+
+const int LONG_MAX = 9223372036854775807;
+
+const int LONG_MIN = -9223372036854775808;
+
+const int ULLONG_MAX = -1;
 
 const int LLONG_MAX = 9223372036854775807;
 
 const int LLONG_MIN = -9223372036854775808;
 
-const int ULLONG_MAX = -1;
+const int LONG_BIT = 64;
 
-const int _I8_MIN = -128;
+const int SSIZE_MAX = 9223372036854775807;
 
-const int _I8_MAX = 127;
+const int WORD_BIT = 32;
 
-const int _UI8_MAX = 255;
+const int SIZE_T_MAX = -1;
 
-const int _I16_MIN = -32768;
+const int UQUAD_MAX = -1;
 
-const int _I16_MAX = 32767;
+const int QUAD_MAX = 9223372036854775807;
 
-const int _UI16_MAX = 65535;
+const int QUAD_MIN = -9223372036854775808;
 
-const int _I32_MIN = -2147483648;
+const int ARG_MAX = 1048576;
 
-const int _I32_MAX = 2147483647;
+const int CHILD_MAX = 266;
 
-const int _UI32_MAX = 4294967295;
+const int GID_MAX = 2147483647;
 
-const int _I64_MIN = -9223372036854775808;
+const int LINK_MAX = 32767;
 
-const int _I64_MAX = 9223372036854775807;
+const int MAX_CANON = 1024;
 
-const int _UI64_MAX = -1;
+const int MAX_INPUT = 1024;
 
-const int SIZE_MAX = -1;
+const int NAME_MAX = 255;
 
-const int RSIZE_MAX = 9223372036854775807;
+const int NGROUPS_MAX = 16;
+
+const int UID_MAX = 2147483647;
+
+const int OPEN_MAX = 10240;
+
+const int PATH_MAX = 1024;
+
+const int PIPE_BUF = 512;
+
+const int BC_BASE_MAX = 99;
+
+const int BC_DIM_MAX = 2048;
+
+const int BC_SCALE_MAX = 99;
+
+const int BC_STRING_MAX = 1000;
+
+const int CHARCLASS_NAME_MAX = 14;
+
+const int COLL_WEIGHTS_MAX = 2;
+
+const int EQUIV_CLASS_MAX = 2;
+
+const int EXPR_NEST_MAX = 32;
+
+const int LINE_MAX = 2048;
+
+const int RE_DUP_MAX = 255;
+
+const int NZERO = 20;
+
+const int _POSIX_ARG_MAX = 4096;
+
+const int _POSIX_CHILD_MAX = 25;
+
+const int _POSIX_LINK_MAX = 8;
+
+const int _POSIX_MAX_CANON = 255;
+
+const int _POSIX_MAX_INPUT = 255;
+
+const int _POSIX_NAME_MAX = 14;
+
+const int _POSIX_NGROUPS_MAX = 8;
+
+const int _POSIX_OPEN_MAX = 20;
+
+const int _POSIX_PATH_MAX = 256;
+
+const int _POSIX_PIPE_BUF = 512;
+
+const int _POSIX_SSIZE_MAX = 32767;
+
+const int _POSIX_STREAM_MAX = 8;
+
+const int _POSIX_TZNAME_MAX = 6;
+
+const int _POSIX2_BC_BASE_MAX = 99;
+
+const int _POSIX2_BC_DIM_MAX = 2048;
+
+const int _POSIX2_BC_SCALE_MAX = 99;
+
+const int _POSIX2_BC_STRING_MAX = 1000;
+
+const int _POSIX2_EQUIV_CLASS_MAX = 2;
+
+const int _POSIX2_EXPR_NEST_MAX = 32;
+
+const int _POSIX2_LINE_MAX = 2048;
+
+const int _POSIX2_RE_DUP_MAX = 255;
+
+const int _POSIX_AIO_LISTIO_MAX = 2;
+
+const int _POSIX_AIO_MAX = 1;
+
+const int _POSIX_DELAYTIMER_MAX = 32;
+
+const int _POSIX_MQ_OPEN_MAX = 8;
+
+const int _POSIX_MQ_PRIO_MAX = 32;
+
+const int _POSIX_RTSIG_MAX = 8;
+
+const int _POSIX_SEM_NSEMS_MAX = 256;
+
+const int _POSIX_SEM_VALUE_MAX = 32767;
+
+const int _POSIX_SIGQUEUE_MAX = 32;
+
+const int _POSIX_TIMER_MAX = 32;
+
+const int _POSIX_CLOCKRES_MIN = 20000000;
+
+const int _POSIX_THREAD_DESTRUCTOR_ITERATIONS = 4;
+
+const int _POSIX_THREAD_KEYS_MAX = 128;
+
+const int _POSIX_THREAD_THREADS_MAX = 64;
+
+const int PTHREAD_DESTRUCTOR_ITERATIONS = 4;
+
+const int PTHREAD_KEYS_MAX = 512;
+
+const int PTHREAD_STACK_MIN = 16384;
+
+const int _POSIX_HOST_NAME_MAX = 255;
+
+const int _POSIX_LOGIN_NAME_MAX = 9;
+
+const int _POSIX_SS_REPL_MAX = 4;
+
+const int _POSIX_SYMLINK_MAX = 255;
+
+const int _POSIX_SYMLOOP_MAX = 8;
+
+const int _POSIX_TRACE_EVENT_NAME_MAX = 30;
+
+const int _POSIX_TRACE_NAME_MAX = 8;
+
+const int _POSIX_TRACE_SYS_MAX = 8;
+
+const int _POSIX_TRACE_USER_EVENT_MAX = 32;
+
+const int _POSIX_TTY_NAME_MAX = 9;
+
+const int _POSIX2_CHARCLASS_NAME_MAX = 14;
+
+const int _POSIX2_COLL_WEIGHTS_MAX = 2;
+
+const int _POSIX_RE_DUP_MAX = 255;
+
+const int OFF_MIN = -9223372036854775808;
+
+const int OFF_MAX = 9223372036854775807;
+
+const int PASS_MAX = 128;
+
+const int NL_ARGMAX = 9;
+
+const int NL_LANGMAX = 14;
+
+const int NL_MSGMAX = 32767;
+
+const int NL_NMAX = 1;
+
+const int NL_SETMAX = 255;
+
+const int NL_TEXTMAX = 2048;
+
+const int _XOPEN_IOV_MAX = 16;
+
+const int IOV_MAX = 1024;
+
+const int _XOPEN_NAME_MAX = 255;
+
+const int _XOPEN_PATH_MAX = 1024;
 
 const int DC_TIMEZONE_NONE = -2147483648;
 

@@ -1,0 +1,1 @@
+#include "../../src/libdivecomputer/src/liquivision_lynx_parser.c"

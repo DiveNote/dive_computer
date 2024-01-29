@@ -34,13 +34,14 @@ class DiveComputerFfi {
       );
     });
 
+    const String libName = 'dive_computer';
     String fileName;
     if (Platform.isWindows) {
-      fileName = 'libdivecomputer-0.dll';
+      fileName = 'lib$libName.dll';
     } else if (Platform.isAndroid) {
-      fileName = 'libdivecomputer.so';
-    } else if (Platform.isMacOS) {
-      fileName = 'libdivecomputer.0.dylib';
+      fileName = 'lib$libName.so';
+    } else if (Platform.isMacOS || Platform.isIOS) {
+      fileName = '$libName.framework/$libName';
     } else {
       throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
     }
