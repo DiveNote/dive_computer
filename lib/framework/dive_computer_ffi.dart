@@ -155,6 +155,9 @@ class DiveComputerFfi {
       case ComputerTransport.serial:
         iostream = _connectSerial(computerDescriptor);
         break;
+      case ComputerTransport.usb:
+        iostream = _connectUsb(computerDescriptor);
+        break;
       default:
         throw UnimplementedError();
     }
