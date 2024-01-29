@@ -2,7 +2,6 @@ import 'dart:ffi' as ffi;
 import 'dart:io';
 import 'dart:developer' as developer;
 
-import 'package:dive_computer/framework/dive_computer_interface.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart' as logging;
