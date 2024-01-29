@@ -1,0 +1,1 @@
+#include "../../src/libdivecomputer/src/serial_posix.c"
