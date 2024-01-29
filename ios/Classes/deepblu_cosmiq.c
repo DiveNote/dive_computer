@@ -1,0 +1,1 @@
+#include "../../src/libdivecomputer/src/deepblu_cosmiq.c"
