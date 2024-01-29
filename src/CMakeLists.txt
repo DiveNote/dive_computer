@@ -26,6 +26,7 @@ add_library(dive_computer SHARED
   "libdivecomputer/src/parser.c"
   "libdivecomputer/src/serial_posix.c"
   "libdivecomputer/src/usb.c"
+  "libdivecomputer/src/usbhid.c"
 
   "libdivecomputer/src/atomics_cobalt.c"
   "libdivecomputer/src/atomics_cobalt_parser.c"
