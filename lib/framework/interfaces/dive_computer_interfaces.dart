@@ -24,6 +24,8 @@ class Interfaces {
         return _connectSerial(computer);
       case ComputerTransport.usb:
         return _connectUsb(computer);
+      case ComputerTransport.usbhid:
+        return _connectUsbHid(computer);
       default:
         throw UnimplementedError();
     }
@@ -81,30 +83,36 @@ class Interfaces {
 
   ffi.Pointer<dc_iostream_t> _connectUsb(
       ffi.Pointer<dc_descriptor_t> computer) {
-    final iterator = calloc<ffi.Pointer<dc_iterator_t>>();
+    // final iterator = calloc<ffi.Pointer<dc_iterator_t>>();
 
-    handleResult(
-      bindings.dc_usbhid_iterator_new(iterator, context.value, computer),
-      'usbhid connection',
-    );
+    // handleResult(
+    //   bindings.dc_usbhid_iterator_new(iterator, context.value, computer),
+    //   'usbhid connection',
+    // );
 
-    final names = <ffi.Pointer<Utf8>>[];
+    // final names = <ffi.Pointer<Utf8>>[];
 
-    int result;
-    final desc = calloc<ffi.Pointer<dc_usbhid_device_t>>();
-    while ((result = bindings.dc_iterator_next(iterator.value, desc.cast())) ==
-        dc_status_t.DC_STATUS_SUCCESS) {
-      final ffi.Pointer<Utf8> name =
-          bindings.dc_usb_device_get_vid(desc.value).cast();
-      names.add(name);
+    // int result;
+    // final desc = calloc<ffi.Pointer<dc_usbhid_device_t>>();
+    // while ((result = bindings.dc_iterator_next(iterator.value, desc.cast())) ==
+    //     dc_status_t.DC_STATUS_SUCCESS) {
+    //   final ffi.Pointer<Utf8> name =
+    //       bindings.dc_usbhid_device_get_vid(desc.value).cast();
+    //   names.add(name);
 
-      bindings.dc_serial_device_free(desc.value);
-    }
-    handleResult(result, 'iterator next');
-    log.info(
-      'Serial devices: ${names.map((e) => e.toDartString()).join(', ')}',
-    );
+    //   bindings.dc_serial_device_free(desc.value);
+    // }
+    // handleResult(result, 'iterator next');
+    // log.info(
+    //   'Serial devices: ${names.map((e) => e.toDartString()).join(', ')}',
+    // );
 
+    final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
+    return iostream.value;
+  }
+
+  ffi.Pointer<dc_iostream_t> _connectUsbHid(
+      ffi.Pointer<dc_descriptor_t> computer) {
     final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
     return iostream.value;
   }
