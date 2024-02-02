@@ -25,7 +25,7 @@ DiveComputer FFI plugin for Flutter.
 
   s.pod_target_xcconfig = { 
     'DEFINES_MODULE' => 'YES',
-    'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/../src/libdivecomputer/include"',
+    'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/../src/libdivecomputer/include" "${PODS_TARGET_SRCROOT}/../src/hidapi/hidapi"',
     'GCC_WARN_INHIBIT_ALL_WARNINGS' => 'YES',
   }
 
