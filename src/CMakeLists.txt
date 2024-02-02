@@ -3,9 +3,20 @@
 # the plugin to fail to compile for some customers of the plugin.
 cmake_minimum_required(VERSION 3.10)
 
-project(dive_computer_library VERSION 0.0.1 LANGUAGES C)
+project(libdivecomputer VERSION 0.0.1 LANGUAGES C)
 
-add_library(dive_computer SHARED
+add_subdirectory(hidapi hidapi)
+
+add_compile_definitions(__APPLE__)
+add_compile_definitions(HAVE_HIDAPI)
+add_compile_definitions(HAVE_PTHREAD_H)
+
+include_directories(
+  "libdivecomputer/include"
+  "hidapi/hidapi"
+)
+
+add_library(libdivecomputer SHARED
   "libdivecomputer/src/context.c"
   "libdivecomputer/src/device.c"
   "libdivecomputer/src/iterator.c"
@@ -114,11 +125,19 @@ add_library(dive_computer SHARED
   "libdivecomputer/src/zeagle_n2ition3.c"
 )
 
-include_directories("libdivecomputer/include")
+if(APPLE)
+  target_link_libraries(libdivecomputer hidapi_darwin)
+elseif(WIN32)
+  target_link_libraries(libdivecomputer hidapi_winapi)
+elseif(NOT WIN32)
+  if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    target_link_libraries(libdivecomputer hidapi_hidraw)
+  endif()
+endif()
 
-set_target_properties(dive_computer PROPERTIES
+set_target_properties(libdivecomputer PROPERTIES
   PUBLIC_HEADER dive_computer.h
-  OUTPUT_NAME "dive_computer"
+  OUTPUT_NAME "libdivecomputer"
 )
 
-target_compile_definitions(dive_computer PUBLIC DART_SHARED_LIB)
+target_compile_definitions(libdivecomputer PUBLIC DART_SHARED_LIB)
