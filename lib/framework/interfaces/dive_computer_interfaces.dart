@@ -22,8 +22,6 @@ class Interfaces {
     switch (transport) {
       case ComputerTransport.serial:
         return _connectSerial(computer);
-      case ComputerTransport.usb:
-        return _connectUsb(computer);
       case ComputerTransport.usbhid:
         return _connectUsbHid(computer);
       default:
@@ -81,38 +79,6 @@ class Interfaces {
     return iostream.value;
   }
 
-  ffi.Pointer<dc_iostream_t> _connectUsb(
-      ffi.Pointer<dc_descriptor_t> computer) {
-    final iterator = calloc<ffi.Pointer<dc_iterator_t>>();
-
-    handleResult(
-      bindings.dc_usb_iterator_new(iterator, context.value, computer),
-      'usb connection',
-    );
-
-    final List<List<int>> names = [];
-
-    int result;
-    final desc = calloc<ffi.Pointer<dc_usb_device_t>>();
-    while ((result = bindings.dc_iterator_next(iterator.value, desc.cast())) ==
-        dc_status_t.DC_STATUS_SUCCESS) {
-      final List<int> name = [
-        bindings.dc_usb_device_get_vid(desc.value),
-        bindings.dc_usb_device_get_pid(desc.value),
-      ];
-      names.add(name);
-
-      bindings.dc_usb_device_free(desc.value);
-    }
-    handleResult(result, 'iterator next');
-    log.info(
-      'Serial devices: ${names.map((e) => e).join(', ')}',
-    );
-
-    final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
-    return iostream.value;
-  }
-
   ffi.Pointer<dc_iostream_t> _connectUsbHid(
       ffi.Pointer<dc_descriptor_t> computer) {
     final iterator = calloc<ffi.Pointer<dc_iterator_t>>();
@@ -122,26 +88,76 @@ class Interfaces {
       'usbhid connection',
     );
 
-    final List<List<int>> names = [];
-
-    int result;
     final desc = calloc<ffi.Pointer<dc_usbhid_device_t>>();
-    while ((result = bindings.dc_iterator_next(iterator.value, desc.cast())) ==
+    while (bindings.dc_iterator_next(iterator.value, desc.cast()) ==
         dc_status_t.DC_STATUS_SUCCESS) {
-      final List<int> name = [
-        bindings.dc_usbhid_device_get_vid(desc.value),
-        bindings.dc_usbhid_device_get_pid(desc.value),
-      ];
-      names.add(name);
-
-      bindings.dc_usbhid_device_free(desc.value);
+      print('test');
+      // handleResult(
+      //   bindings.dc_iterator_next(iterator.value, desc.cast()),
+      //   'iterator next',
+      // );
+      break;
     }
-    handleResult(result, 'iterator next');
-    log.info(
-      'UsbHID devices: ${names.map((e) => e).join(', ')}',
+
+    handleResult(
+      bindings.dc_iterator_free(iterator.value),
+      'iterator freeing',
     );
 
     final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
+    handleResult(
+      bindings.dc_usbhid_open(
+        iostream,
+        context.value,
+        desc.value,
+      ),
+      'usbhid open',
+    );
+
+    bindings.dc_usbhid_device_free(desc.value);
+
     return iostream.value;
+
+    // final List<List<int>> names = [];
+
+    // int result;
+    // final desc = calloc<ffi.Pointer<dc_usbhid_device_t>>();
+    // while ((result = bindings.dc_iterator_next(iterator.value, desc.cast())) ==
+    //     dc_status_t.DC_STATUS_SUCCESS) {
+    //   final List<int> name = [
+    //     bindings.dc_usbhid_device_get_vid(desc.value),
+    //     bindings.dc_usbhid_device_get_pid(desc.value),
+    //   ];
+    //   names.add(name);
+
+    //   //bindings.dc_usbhid_device_free(desc.value);
+    // }
+    // handleResult(result, 'iterator next');
+    // log.info(
+    //   'UsbHID devices: ${names.map((e) => e).join(', ')}',
+    // );
+
+    // handleResult(
+    //   bindings.dc_iterator_free(iterator.value),
+    //   'iterator freeing',
+    // );
+
+    // if (names.isEmpty) {
+    //   handleResult(dc_status_t.DC_STATUS_NODEVICE);
+    // }
+
+    // final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
+    // handleResult(
+    //   bindings.dc_usbhid_open(
+    //     iostream,
+    //     context.value,
+    //     desc.value,
+    //   ),
+    //   'usbhid open',
+    // );
+
+    // bindings.dc_usbhid_device_free(desc.value);
+
+    // return iostream.value;
   }
 }

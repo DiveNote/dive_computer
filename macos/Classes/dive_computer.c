@@ -1,4 +1,4 @@
-#include "apple_defines.h"
+#include "../../src/libdivecomputer_config/config.h"
 #include "../../src/libdivecomputer/src/context.c"
 #include "../../src/libdivecomputer/src/device.c"
 #include "../../src/libdivecomputer/src/iterator.c"

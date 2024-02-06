@@ -6,14 +6,57 @@ cmake_minimum_required(VERSION 3.10)
 project(libdivecomputer VERSION 0.0.1 LANGUAGES C)
 
 add_subdirectory(hidapi hidapi)
+add_subdirectory(libusb libusb)
 
-add_compile_definitions(__APPLE__)
-add_compile_definitions(HAVE_HIDAPI)
-add_compile_definitions(HAVE_PTHREAD_H)
+add_compile_definitions(ENABLE_LOGGING=1)
+add_compile_definitions(HAVE_CLOCK_GETTIME=1)
+add_compile_definitions(HAVE_DECL_OPTRESET=1)
+add_compile_definitions(HAVE_DECL_STRERROR_R=1)
+add_compile_definitions(HAVE_DLFCN_H=1)
+add_compile_definitions(HAVE_GETOPT_H=1)
+add_compile_definitions(HAVE_GETOPT_LONG=1)
+add_compile_definitions(HAVE_GMTIME_R=1)
+add_compile_definitions(HAVE_HIDAPI=1)
+add_compile_definitions(HAVE_INTTYPES_H=1)
+add_compile_definitions(HAVE_IOKIT_SERIAL_IOSS_H=1)
+add_compile_definitions(HAVE_LIBUSB=1)
+add_compile_definitions(HAVE_LOCALTIME_R=1)
+add_compile_definitions(HAVE_MACH_ABSOLUTE_TIME=1)
+add_compile_definitions(HAVE_MACH_MACH_TIME_H=1)
+add_compile_definitions(HAVE_PTHREAD_H=1)
+add_compile_definitions(HAVE_STDINT_H=1)
+add_compile_definitions(HAVE_STDIO_H=1)
+add_compile_definitions(HAVE_STDLIB_H=1)
+add_compile_definitions(HAVE_STRERROR_R=1)
+add_compile_definitions(HAVE_STRINGS_H=1)
+add_compile_definitions(HAVE_STRING_H=1)
+add_compile_definitions(HAVE_STRUCT_TM_TM_GMTOFF=1)
+add_compile_definitions(HAVE_SYS_PARAM_H=1)
+add_compile_definitions(HAVE_SYS_SOCKET_H=1)
+add_compile_definitions(HAVE_SYS_STAT_H=1)
+add_compile_definitions(HAVE_SYS_TYPES_H=1)
+add_compile_definitions(HAVE_TIMEGM=1)
+add_compile_definitions(HAVE_UNISTD_H=1)
+add_compile_definitions(HAVE_VERSION_SUFFIX=1)
+add_compile_definitions(LT_OBJDIR=".libs/")
+add_compile_definitions(PACKAGE="libdivecomputer")
+add_compile_definitions(PACKAGE_BUGREPORT="")
+add_compile_definitions(PACKAGE_NAME="libdivecomputer")
+add_compile_definitions(PACKAGE_STRING="libdivecomputer 0.9.0-devel")
+add_compile_definitions(PACKAGE_TARNAME="libdivecomputer")
+add_compile_definitions(PACKAGE_URL="")
+add_compile_definitions(PACKAGE_VERSION="0.9.0-devel")
+add_compile_definitions(STDC_HEADERS=1)
+add_compile_definitions(VERSION="0.9.0-devel")
+
+# add_compile_definitions(__APPLE__=1)
+# add_compile_definitions(HAVE_HIDAPI=1)
+# add_compile_definitions(HAVE_PTHREAD_H=1)
 
 include_directories(
   "libdivecomputer/include"
   "hidapi/hidapi"
+  "libusb/libusb"
 )
 
 add_library(libdivecomputer SHARED
@@ -125,15 +168,8 @@ add_library(libdivecomputer SHARED
   "libdivecomputer/src/zeagle_n2ition3.c"
 )
 
-if(APPLE)
-  target_link_libraries(libdivecomputer hidapi_darwin)
-elseif(WIN32)
-  target_link_libraries(libdivecomputer hidapi_winapi)
-elseif(NOT WIN32)
-  if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_link_libraries(libdivecomputer hidapi_hidraw)
-  endif()
-endif()
+target_link_libraries(libdivecomputer PRIVATE hidapi::hidapi)
+target_link_libraries(libdivecomputer PRIVATE libusb)
 
 set_target_properties(libdivecomputer PROPERTIES
   PUBLIC_HEADER dive_computer.h

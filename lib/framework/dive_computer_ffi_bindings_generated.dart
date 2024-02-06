@@ -1867,23 +1867,16 @@ abstract class dc_loglevel_t {
   static const int DC_LOGLEVEL_ALL = 5;
 }
 
-typedef dc_logfunc_t = ffi.Pointer<ffi.NativeFunction<dc_logfunc_tFunction>>;
-typedef dc_logfunc_tFunction = ffi.Void Function(
-    ffi.Pointer<dc_context_t> context,
-    ffi.Int32 loglevel,
-    ffi.Pointer<ffi.Char> file,
-    ffi.UnsignedInt line,
-    ffi.Pointer<ffi.Char> function,
-    ffi.Pointer<ffi.Char> message,
-    ffi.Pointer<ffi.Void> userdata);
-typedef Dartdc_logfunc_tFunction = void Function(
-    ffi.Pointer<dc_context_t> context,
-    int loglevel,
-    ffi.Pointer<ffi.Char> file,
-    int line,
-    ffi.Pointer<ffi.Char> function,
-    ffi.Pointer<ffi.Char> message,
-    ffi.Pointer<ffi.Void> userdata);
+typedef dc_logfunc_t = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Void Function(
+            ffi.Pointer<dc_context_t> context,
+            ffi.Int32 loglevel,
+            ffi.Pointer<ffi.Char> file,
+            ffi.UnsignedInt line,
+            ffi.Pointer<ffi.Char> function,
+            ffi.Pointer<ffi.Char> message,
+            ffi.Pointer<ffi.Void> userdata)>>;
 
 final class dc_iterator_t extends ffi.Opaque {}
 
@@ -2083,7 +2076,6 @@ final class dc_datetime_t extends ffi.Struct {
 }
 
 typedef dc_ticks_t = ffi.LongLong;
-typedef Dartdc_ticks_t = int;
 
 abstract class dc_event_type_t {
   static const int DC_EVENT_WAITING = 1;
@@ -2129,38 +2121,20 @@ final class dc_event_vendor_t extends ffi.Struct {
   external int size;
 }
 
-typedef dc_cancel_callback_t
-    = ffi.Pointer<ffi.NativeFunction<dc_cancel_callback_tFunction>>;
-typedef dc_cancel_callback_tFunction = ffi.Int Function(
-    ffi.Pointer<ffi.Void> userdata);
-typedef Dartdc_cancel_callback_tFunction = int Function(
-    ffi.Pointer<ffi.Void> userdata);
-typedef dc_event_callback_t
-    = ffi.Pointer<ffi.NativeFunction<dc_event_callback_tFunction>>;
-typedef dc_event_callback_tFunction = ffi.Void Function(
-    ffi.Pointer<dc_device_t> device,
-    ffi.Int32 event,
-    ffi.Pointer<ffi.Void> data,
-    ffi.Pointer<ffi.Void> userdata);
-typedef Dartdc_event_callback_tFunction = void Function(
-    ffi.Pointer<dc_device_t> device,
-    int event,
-    ffi.Pointer<ffi.Void> data,
-    ffi.Pointer<ffi.Void> userdata);
-typedef dc_dive_callback_t
-    = ffi.Pointer<ffi.NativeFunction<dc_dive_callback_tFunction>>;
-typedef dc_dive_callback_tFunction = ffi.Int Function(
-    ffi.Pointer<ffi.UnsignedChar> data,
-    ffi.UnsignedInt size,
-    ffi.Pointer<ffi.UnsignedChar> fingerprint,
-    ffi.UnsignedInt fsize,
-    ffi.Pointer<ffi.Void> userdata);
-typedef Dartdc_dive_callback_tFunction = int Function(
-    ffi.Pointer<ffi.UnsignedChar> data,
-    int size,
-    ffi.Pointer<ffi.UnsignedChar> fingerprint,
-    int fsize,
-    ffi.Pointer<ffi.Void> userdata);
+typedef dc_cancel_callback_t = ffi.Pointer<
+    ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void> userdata)>>;
+typedef dc_event_callback_t = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Void Function(ffi.Pointer<dc_device_t> device, ffi.Int32 event,
+            ffi.Pointer<ffi.Void> data, ffi.Pointer<ffi.Void> userdata)>>;
+typedef dc_dive_callback_t = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Int Function(
+            ffi.Pointer<ffi.UnsignedChar> data,
+            ffi.UnsignedInt size,
+            ffi.Pointer<ffi.UnsignedChar> fingerprint,
+            ffi.UnsignedInt fsize,
+            ffi.Pointer<ffi.Void> userdata)>>;
 
 final class dc_serial_device_t extends ffi.Opaque {}
 
@@ -2499,12 +2473,10 @@ final class UnnamedStruct6 extends ffi.Struct {
 
 final class dc_parser_t extends ffi.Opaque {}
 
-typedef dc_sample_callback_t
-    = ffi.Pointer<ffi.NativeFunction<dc_sample_callback_tFunction>>;
-typedef dc_sample_callback_tFunction = ffi.Void Function(ffi.Int32 type,
-    ffi.Pointer<dc_sample_value_t> value, ffi.Pointer<ffi.Void> userdata);
-typedef Dartdc_sample_callback_tFunction = void Function(int type,
-    ffi.Pointer<dc_sample_value_t> value, ffi.Pointer<ffi.Void> userdata);
+typedef dc_sample_callback_t = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Void Function(ffi.Int32 type, ffi.Pointer<dc_sample_value_t> value,
+            ffi.Pointer<ffi.Void> userdata)>>;
 
 /// USB control transfer.
 final class dc_usb_control_t extends ffi.Struct {

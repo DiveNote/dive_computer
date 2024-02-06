@@ -83,7 +83,7 @@ class DiveComputerFfi {
     handleResult(
       _bindings.dc_context_set_loglevel(
         context.value,
-        dc_loglevel_t.DC_LOGLEVEL_WARNING,
+        dc_loglevel_t.DC_LOGLEVEL_ALL,
       ),
       'log level setting',
     );
