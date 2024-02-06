@@ -4,3 +4,6 @@
 [submodule "src/hidapi"]
 	path = src/hidapi
 	url = https://github.com/libusb/hidapi.git
+[submodule "src/libusb"]
+	path = src/libusb
+	url = https://github.com/libusb/libusb.git
