@@ -1731,6 +1731,179 @@ class DiveComputerFfiBindings {
   late final _dc_usbhid_open = _dc_usbhid_openPtr.asFunction<
       int Function(ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
           ffi.Pointer<dc_context_t>, ffi.Pointer<dc_usbhid_device_t>)>();
+
+  /// Convert a bluetooth address to a string.
+  ///
+  /// The bluetooth address is formatted as XX:XX:XX:XX:XX:XX, where each
+  /// XX is a hexadecimal number specifying an octet of the 48-bit address.
+  /// The minimum size for the buffer is #DC_BLUETOOTH_SIZE bytes.
+  ///
+  /// @param[in]  address  A bluetooth address.
+  /// @param[in]  str      The memory buffer to store the result.
+  /// @param[in]  size     The size of the memory buffer.
+  /// @returns The null-terminated string on success, or NULL on failure.
+  ffi.Pointer<ffi.Char> dc_bluetooth_addr2str(
+    int address,
+    ffi.Pointer<ffi.Char> str,
+    int size,
+  ) {
+    return _dc_bluetooth_addr2str(
+      address,
+      str,
+      size,
+    );
+  }
+
+  late final _dc_bluetooth_addr2strPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(dc_bluetooth_address_t,
+              ffi.Pointer<ffi.Char>, ffi.Size)>>('dc_bluetooth_addr2str');
+  late final _dc_bluetooth_addr2str = _dc_bluetooth_addr2strPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(int, ffi.Pointer<ffi.Char>, int)>();
+
+  /// Convert a string to a bluetooth address.
+  ///
+  /// The string is expected to be in the format XX:XX:XX:XX:XX:XX, where
+  /// each XX is a hexadecimal number specifying an octet of the 48-bit
+  /// address.
+  ///
+  /// @param[in]  address  A null-terminated string.
+  /// @returns The bluetooth address on success, or zero on failure.
+  int dc_bluetooth_str2addr(
+    ffi.Pointer<ffi.Char> address,
+  ) {
+    return _dc_bluetooth_str2addr(
+      address,
+    );
+  }
+
+  late final _dc_bluetooth_str2addrPtr = _lookup<
+      ffi.NativeFunction<
+          dc_bluetooth_address_t Function(
+              ffi.Pointer<ffi.Char>)>>('dc_bluetooth_str2addr');
+  late final _dc_bluetooth_str2addr = _dc_bluetooth_str2addrPtr
+      .asFunction<int Function(ffi.Pointer<ffi.Char>)>();
+
+  /// Get the address of the bluetooth device.
+  ///
+  /// @param[in]  device  A valid bluetooth device.
+  int dc_bluetooth_device_get_address(
+    ffi.Pointer<dc_bluetooth_device_t> device,
+  ) {
+    return _dc_bluetooth_device_get_address(
+      device,
+    );
+  }
+
+  late final _dc_bluetooth_device_get_addressPtr = _lookup<
+          ffi.NativeFunction<
+              dc_bluetooth_address_t Function(
+                  ffi.Pointer<dc_bluetooth_device_t>)>>(
+      'dc_bluetooth_device_get_address');
+  late final _dc_bluetooth_device_get_address =
+      _dc_bluetooth_device_get_addressPtr
+          .asFunction<int Function(ffi.Pointer<dc_bluetooth_device_t>)>();
+
+  /// Get the name of the bluetooth device.
+  ///
+  /// @param[in]  device  A valid bluetooth device.
+  ffi.Pointer<ffi.Char> dc_bluetooth_device_get_name(
+    ffi.Pointer<dc_bluetooth_device_t> device,
+  ) {
+    return _dc_bluetooth_device_get_name(
+      device,
+    );
+  }
+
+  late final _dc_bluetooth_device_get_namePtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Pointer<ffi.Char> Function(
+                  ffi.Pointer<dc_bluetooth_device_t>)>>(
+      'dc_bluetooth_device_get_name');
+  late final _dc_bluetooth_device_get_name =
+      _dc_bluetooth_device_get_namePtr.asFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<dc_bluetooth_device_t>)>();
+
+  /// Destroy the bluetooth device and free all resources.
+  ///
+  /// @param[in]  device  A valid bluetooth device.
+  void dc_bluetooth_device_free(
+    ffi.Pointer<dc_bluetooth_device_t> device,
+  ) {
+    return _dc_bluetooth_device_free(
+      device,
+    );
+  }
+
+  late final _dc_bluetooth_device_freePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<dc_bluetooth_device_t>)>>('dc_bluetooth_device_free');
+  late final _dc_bluetooth_device_free = _dc_bluetooth_device_freePtr
+      .asFunction<void Function(ffi.Pointer<dc_bluetooth_device_t>)>();
+
+  /// Create an iterator to enumerate the bluetooth devices.
+  ///
+  /// @param[out] iterator    A location to store the iterator.
+  /// @param[in]  context     A valid context object.
+  /// @param[in]  descriptor  A valid device descriptor or NULL.
+  /// @returns #DC_STATUS_SUCCESS on success, or another #dc_status_t code
+  /// on failure.
+  int dc_bluetooth_iterator_new(
+    ffi.Pointer<ffi.Pointer<dc_iterator_t>> iterator,
+    ffi.Pointer<dc_context_t> context,
+    ffi.Pointer<dc_descriptor_t> descriptor,
+  ) {
+    return _dc_bluetooth_iterator_new(
+      iterator,
+      context,
+      descriptor,
+    );
+  }
+
+  late final _dc_bluetooth_iterator_newPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Pointer<dc_iterator_t>>,
+              ffi.Pointer<dc_context_t>,
+              ffi.Pointer<dc_descriptor_t>)>>('dc_bluetooth_iterator_new');
+  late final _dc_bluetooth_iterator_new =
+      _dc_bluetooth_iterator_newPtr.asFunction<
+          int Function(ffi.Pointer<ffi.Pointer<dc_iterator_t>>,
+              ffi.Pointer<dc_context_t>, ffi.Pointer<dc_descriptor_t>)>();
+
+  /// Open an bluetooth connection.
+  ///
+  /// @param[out]  iostream   A location to store the bluetooth connection.
+  /// @param[in]   context    A valid context object.
+  /// @param[in]   address    The bluetooth device address.
+  /// @param[in]   port       The bluetooth port number.
+  /// @returns #DC_STATUS_SUCCESS on success, or another #dc_status_t code
+  /// on failure.
+  int dc_bluetooth_open(
+    ffi.Pointer<ffi.Pointer<dc_iostream_t>> iostream,
+    ffi.Pointer<dc_context_t> context,
+    int address,
+    int port,
+  ) {
+    return _dc_bluetooth_open(
+      iostream,
+      context,
+      address,
+      port,
+    );
+  }
+
+  late final _dc_bluetooth_openPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
+              ffi.Pointer<dc_context_t>,
+              dc_bluetooth_address_t,
+              ffi.UnsignedInt)>>('dc_bluetooth_open');
+  late final _dc_bluetooth_open = _dc_bluetooth_openPtr.asFunction<
+      int Function(ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
+          ffi.Pointer<dc_context_t>, int, int)>();
 }
 
 abstract class dc_status_t {
@@ -2540,6 +2713,10 @@ final class dc_usbhid_desc_t extends ffi.Struct {
 
 final class dc_usbhid_device_t extends ffi.Opaque {}
 
+typedef dc_bluetooth_address_t = ffi.UnsignedLongLong;
+
+final class dc_bluetooth_device_t extends ffi.Opaque {}
+
 const int __DARWIN_ONLY_64_BIT_INO_T = 1;
 
 const int __DARWIN_ONLY_UNIX_CONFORMANCE = 1;
@@ -2863,3 +3040,7 @@ const int DC_GASMIX_UNKNOWN = 4294967295;
 const int DC_IOCTL_USB_CONTROL_READ = 1073771776;
 
 const int DC_IOCTL_USB_CONTROL_WRITE = 2147513600;
+
+const int DC_IOCTL_BLE_GET_NAME = 1073766912;
+
+const int DC_BLUETOOTH_SIZE = 18;

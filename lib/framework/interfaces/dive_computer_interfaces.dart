@@ -22,8 +22,10 @@ class Interfaces {
     switch (transport) {
       case ComputerTransport.serial:
         return _connectSerial(computer);
-      case ComputerTransport.usbhid:
-        return _connectUsbHid(computer);
+      // case ComputerTransport.usbhid:
+      //   return _connectUsbHid(computer);
+      case ComputerTransport.ble:
+        return _connectBle(computer);
       default:
         throw UnimplementedError();
     }
@@ -91,12 +93,13 @@ class Interfaces {
     final desc = calloc<ffi.Pointer<dc_usbhid_device_t>>();
     while (bindings.dc_iterator_next(iterator.value, desc.cast()) ==
         dc_status_t.DC_STATUS_SUCCESS) {
-      print('test');
+      print(
+          'vid: ${bindings.dc_usbhid_device_get_vid(desc.value)}, pid: ${bindings.dc_usbhid_device_get_pid(desc.value)}');
       // handleResult(
       //   bindings.dc_iterator_next(iterator.value, desc.cast()),
       //   'iterator next',
       // );
-      break;
+      //break;
     }
 
     handleResult(
@@ -159,5 +162,19 @@ class Interfaces {
     // bindings.dc_usbhid_device_free(desc.value);
 
     // return iostream.value;
+  }
+
+  ffi.Pointer<dc_iostream_t> _connectBle(
+      ffi.Pointer<dc_descriptor_t> computer) {
+    final iterator = calloc<ffi.Pointer<dc_iterator_t>>();
+
+    handleResult(
+      bindings.dc_bluetooth_iterator_new(iterator, context.value, computer),
+      'bluetooth connection',
+    );
+
+    final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
+
+    return iostream.value;
   }
 }
