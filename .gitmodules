@@ -7,3 +7,6 @@
 [submodule "src/libusb"]
 	path = src/libusb
 	url = https://github.com/libusb/libusb.git
+[submodule "src/bluez"]
+	path = src/bluez
+	url = https://github.com/bluez/bluez.git
