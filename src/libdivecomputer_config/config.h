@@ -1,6 +1,8 @@
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+#define HAVE_CONFIG_H 1
+
 /* Enable logging. */
 #define ENABLE_LOGGING 1
 
@@ -11,7 +13,8 @@
 /* #undef HAVE_AF_IRDA_H */
 
 /* BlueZ library */
-/* #undef HAVE_BLUEZ */
+#define HAVE_BLUEZ 1
+#define BLUETOOTH 1
 
 /* Define to 1 if you have the 'clock_gettime' function. */
 #define HAVE_CLOCK_GETTIME 1
