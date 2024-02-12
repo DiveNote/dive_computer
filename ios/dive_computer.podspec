@@ -26,8 +26,9 @@ DiveComputer FFI plugin for Flutter.
   s.pod_target_xcconfig = { 
     'DEFINES_MODULE' => 'YES', 
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
-    'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/../src/libdivecomputer/include"',
+    'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/../src/libdivecomputer/include" "${PODS_TARGET_SRCROOT}/../src/libdivecomputer_config" "${PODS_TARGET_SRCROOT}/../src/hidapi/hidapi" "${PODS_TARGET_SRCROOT}/../src/hidapi_config" "${PODS_TARGET_SRCROOT}/../src/libusb/libusb" "${PODS_TARGET_SRCROOT}/../src/libusb_config"',
+    'GCC_WARN_INHIBIT_ALL_WARNINGS' => 'YES',
   }
-
+  
   s.swift_version = '5.0'
 end

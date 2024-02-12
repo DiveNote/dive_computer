@@ -1,2 +1,2 @@
 #include "../../src/libdivecomputer_config/config.h"
-#include "../../src/libdivecomputer/src/array.c"
+#include "../../src/libdivecomputer/src/bluetooth.c"
