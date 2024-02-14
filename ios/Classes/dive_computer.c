@@ -1,4 +1,4 @@
-#include "../../src/libdivecomputer_config/config.h"
+#include "config.h"
 #include "../../src/libdivecomputer/src/context.c"
 #include "../../src/libdivecomputer/src/device.c"
 #include "../../src/libdivecomputer/src/iterator.c"
