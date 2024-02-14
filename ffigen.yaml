@@ -13,8 +13,6 @@ headers:
     - 'src/libdivecomputer/include/libdivecomputer/parser.h'
     - 'src/libdivecomputer/include/libdivecomputer/usb.h'
     - 'src/libdivecomputer/include/libdivecomputer/usbhid.h'
-    - 'src/libdivecomputer/include/libdivecomputer/ble.h'
-    - 'src/libdivecomputer/include/libdivecomputer/bluetooth.h'
 preamble: |
   // ignore_for_file: always_specify_types, unused_field, unused_element
   // ignore_for_file: camel_case_types
