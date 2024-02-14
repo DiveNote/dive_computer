@@ -39,7 +39,7 @@
 #define HAVE_GMTIME_R 1
 
 /* hidapi library */
-#define HAVE_HIDAPI 1
+/* #undef HAVE_HIDAPI */
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
@@ -48,7 +48,7 @@
 #define HAVE_IOKIT_SERIAL_IOSS_H 1
 
 /* libusb library */
-#define HAVE_LIBUSB 1
+/* #undef HAVE_LIBUSB */
 
 /* Define to 1 if you have the <linux/irda.h> header file. */
 /* #undef HAVE_LINUX_IRDA_H */
