@@ -65,10 +65,8 @@ class DiveComputerFfi {
 
   static Function(List<Dive>)? divesCallback;
 
-  static final _interfaces = Interfaces(
-    bindings: _bindings,
-    context: context,
-  );
+  static final _interfaces =
+      Interfaces(bindings: _bindings, context: context, log: log);
 
   static void enableDebugLogging([logging.Level level = logging.Level.INFO]) {
     log.level = level;

@@ -6,15 +6,15 @@ import '../utils/utils.dart';
 import '../dive_computer_ffi_bindings_generated.dart';
 import '../../types/computer.dart';
 
-final log = logging.Logger('DiveComputerFfi');
-
 class Interfaces {
   final DiveComputerFfiBindings bindings;
   final ffi.Pointer<ffi.Pointer<dc_context_t>> context;
+  final logging.Logger log;
 
   Interfaces({
     required this.bindings,
     required this.context,
+    required this.log,
   });
 
   ffi.Pointer<dc_iostream_t> connect(
@@ -22,10 +22,10 @@ class Interfaces {
     switch (transport) {
       case ComputerTransport.serial:
         return _connectSerial(computer);
-      // case ComputerTransport.usbhid:
-      //   return _connectUsbHid(computer);
-      case ComputerTransport.ble:
-        return _connectBle(computer);
+      case ComputerTransport.usb:
+        return _connectUsb(computer);
+      case ComputerTransport.usbhid:
+        return _connectUsbHid(computer);
       default:
         throw UnimplementedError();
     }
@@ -81,6 +81,56 @@ class Interfaces {
     return iostream.value;
   }
 
+  ffi.Pointer<dc_iostream_t> _connectUsb(
+      ffi.Pointer<dc_descriptor_t> computer) {
+    final iterator = calloc<ffi.Pointer<dc_iterator_t>>();
+
+    handleResult(
+      bindings.dc_usb_iterator_new(iterator, context.value, computer),
+      'usb connection',
+    );
+
+    final desc = calloc<ffi.Pointer<dc_usb_device_t>>();
+    while (bindings.dc_iterator_next(iterator.value, desc.cast()) ==
+        dc_status_t.DC_STATUS_SUCCESS) {
+      break;
+    }
+
+    handleResult(
+      bindings.dc_iterator_free(iterator.value),
+      'iterator freeing',
+    );
+
+    if (desc.value == ffi.nullptr) {
+      handleResult(dc_status_t.DC_STATUS_NODEVICE);
+    }
+
+    String vidHex = bindings
+        .dc_usb_device_get_vid(desc.value)
+        .toRadixString(16)
+        .padLeft(4, '0');
+    String pidHex = bindings
+        .dc_usb_device_get_pid(desc.value)
+        .toRadixString(16)
+        .padLeft(4, '0');
+
+    log.info('Opening USB device for $vidHex:$pidHex');
+
+    final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
+    handleResult(
+      bindings.dc_usb_open(
+        iostream,
+        context.value,
+        desc.value,
+      ),
+      'usbhid open',
+    );
+
+    bindings.dc_usb_device_free(desc.value);
+
+    return iostream.value;
+  }
+
   ffi.Pointer<dc_iostream_t> _connectUsbHid(
       ffi.Pointer<dc_descriptor_t> computer) {
     final iterator = calloc<ffi.Pointer<dc_iterator_t>>();
@@ -93,19 +143,28 @@ class Interfaces {
     final desc = calloc<ffi.Pointer<dc_usbhid_device_t>>();
     while (bindings.dc_iterator_next(iterator.value, desc.cast()) ==
         dc_status_t.DC_STATUS_SUCCESS) {
-      print(
-          'vid: ${bindings.dc_usbhid_device_get_vid(desc.value)}, pid: ${bindings.dc_usbhid_device_get_pid(desc.value)}');
-      // handleResult(
-      //   bindings.dc_iterator_next(iterator.value, desc.cast()),
-      //   'iterator next',
-      // );
-      //break;
+      break;
     }
 
     handleResult(
       bindings.dc_iterator_free(iterator.value),
       'iterator freeing',
     );
+
+    if (desc.value == ffi.nullptr) {
+      handleResult(dc_status_t.DC_STATUS_NODEVICE);
+    }
+
+    String vidHex = bindings
+        .dc_usbhid_device_get_vid(desc.value)
+        .toRadixString(16)
+        .padLeft(4, '0');
+    String pidHex = bindings
+        .dc_usbhid_device_get_pid(desc.value)
+        .toRadixString(16)
+        .padLeft(4, '0');
+
+    log.info('Opening USB HID device for $vidHex:$pidHex');
 
     final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
     handleResult(
@@ -118,62 +177,6 @@ class Interfaces {
     );
 
     bindings.dc_usbhid_device_free(desc.value);
-
-    return iostream.value;
-
-    // final List<List<int>> names = [];
-
-    // int result;
-    // final desc = calloc<ffi.Pointer<dc_usbhid_device_t>>();
-    // while ((result = bindings.dc_iterator_next(iterator.value, desc.cast())) ==
-    //     dc_status_t.DC_STATUS_SUCCESS) {
-    //   final List<int> name = [
-    //     bindings.dc_usbhid_device_get_vid(desc.value),
-    //     bindings.dc_usbhid_device_get_pid(desc.value),
-    //   ];
-    //   names.add(name);
-
-    //   //bindings.dc_usbhid_device_free(desc.value);
-    // }
-    // handleResult(result, 'iterator next');
-    // log.info(
-    //   'UsbHID devices: ${names.map((e) => e).join(', ')}',
-    // );
-
-    // handleResult(
-    //   bindings.dc_iterator_free(iterator.value),
-    //   'iterator freeing',
-    // );
-
-    // if (names.isEmpty) {
-    //   handleResult(dc_status_t.DC_STATUS_NODEVICE);
-    // }
-
-    // final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
-    // handleResult(
-    //   bindings.dc_usbhid_open(
-    //     iostream,
-    //     context.value,
-    //     desc.value,
-    //   ),
-    //   'usbhid open',
-    // );
-
-    // bindings.dc_usbhid_device_free(desc.value);
-
-    // return iostream.value;
-  }
-
-  ffi.Pointer<dc_iostream_t> _connectBle(
-      ffi.Pointer<dc_descriptor_t> computer) {
-    final iterator = calloc<ffi.Pointer<dc_iterator_t>>();
-
-    handleResult(
-      bindings.dc_bluetooth_iterator_new(iterator, context.value, computer),
-      'bluetooth connection',
-    );
-
-    final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
 
     return iostream.value;
   }
