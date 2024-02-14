@@ -25,6 +25,7 @@ DiveComputer FFI plugin for Flutter.
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 
     'DEFINES_MODULE' => 'YES', 
+    'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/../src/libdivecomputer/include" "${PODS_TARGET_SRCROOT}/../src/libdivecomputer_config"',
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
   }
   
