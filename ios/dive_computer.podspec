@@ -18,7 +18,8 @@ DiveComputer FFI plugin for Flutter.
   # paths, so Classes contains a forwarder C file that relatively imports
   # `../src/*` so that the C sources can be shared among all target platforms.
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'Classes/**/*', 'bluez/lib/*.h'
+  s.header_mappings_dir = 'bluez/lib'
   s.dependency 'Flutter'
   s.platform = :ios, '11.0'
 

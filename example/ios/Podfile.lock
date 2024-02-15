@@ -19,7 +19,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_blue_plus/ios"
 
 SPEC CHECKSUMS:
-  dive_computer: b5812e10488f2173633747360efad9e8ed9f2dee
+  dive_computer: 8d81c7203c4f0779965316a76afc3b10bf0602b3
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_blue_plus: 4837da7d00cf5d441fdd6635b3a57f936778ea96
 

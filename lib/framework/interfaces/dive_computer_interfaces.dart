@@ -26,6 +26,9 @@ class Interfaces {
         return _connectUsb(computer);
       case ComputerTransport.usbhid:
         return _connectUsbHid(computer);
+      case ComputerTransport.ble:
+      case ComputerTransport.bluetooth:
+        return _connectBluetooth(computer);
       default:
         throw UnimplementedError();
     }
@@ -178,6 +181,19 @@ class Interfaces {
 
     bindings.dc_usbhid_device_free(desc.value);
 
+    return iostream.value;
+  }
+
+  ffi.Pointer<dc_iostream_t> _connectBluetooth(
+      ffi.Pointer<dc_descriptor_t> computer) {
+    final iterator = calloc<ffi.Pointer<dc_iterator_t>>();
+
+    handleResult(
+      bindings.dc_bluetooth_iterator_new(iterator, context.value, computer),
+      'bluetooth connection',
+    );
+
+    final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
     return iostream.value;
   }
 }

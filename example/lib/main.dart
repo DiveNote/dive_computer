@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
                             onTap: () async {
                               final dives = await dc.download(
                                 computer,
-                                computer.transports.first,
+                                computer.transports.last,
                                 "exampleFingerprint",
                               );
                               // ignore: use_build_context_synchronously
