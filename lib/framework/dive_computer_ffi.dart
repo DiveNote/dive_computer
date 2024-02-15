@@ -6,13 +6,12 @@ import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart' as logging;
 
+import './interfaces/dive_computer_interfaces.dart';
+import './dive_computer_ffi_bindings_generated.dart';
 import './utils/transports_bitmask.dart';
 import './utils/utils.dart';
 import '../types/computer.dart';
 import '../types/dive.dart';
-
-import './dive_computer_ffi_bindings_generated.dart';
-import './interfaces/dive_computer_interfaces.dart';
 
 final log = logging.Logger('DiveComputerFfi');
 
