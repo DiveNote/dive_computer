@@ -13,7 +13,7 @@
 /* #undef HAVE_AF_IRDA_H */
 
 /* BlueZ library */
-#define HAVE_BLUEZ 1
+/* #undef HAVE_BLUEZ */
 
 /* Define to 1 if you have the 'clock_gettime' function. */
 #define HAVE_CLOCK_GETTIME 1

@@ -33,6 +33,10 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
+  _newExample() {
+    return Center();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,59 +44,62 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('libdivecomputer ffi example'),
         ),
-        body: Container(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Supported dive computers:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  )),
-              const SizedBox(height: 10),
-              Expanded(
-                child: FutureBuilder(
-                  future: supportedComputers,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-
-                    if (snapshot.hasData) {
-                      final computers = snapshot.data as List<Computer>;
-                      return ListView.builder(
-                        itemCount: computers.length,
-                        itemBuilder: (context, index) {
-                          final computer = computers[index];
-                          return GestureDetector(
-                            onTap: () async {
-                              final dives = await dc.download(
-                                computer,
-                                computer.transports.last,
-                                "exampleFingerprint",
-                              );
-                              // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content:
-                                      Text('Downloaded ${dives.length} dives'),
-                                ),
-                              );
-                            },
-                            child: Text(computer.toString()),
-                          );
-                        },
-                      );
-                    }
-
-                    return const Text('Loading...');
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+        body: _newExample(),
       ),
     );
   }
+
+  // _oldExample() {
+  //   return Container(
+  //     padding: const EdgeInsets.all(10),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         const Text('Supported dive computers:',
+  //             style: TextStyle(
+  //               fontWeight: FontWeight.bold,
+  //             )),
+  //         const SizedBox(height: 10),
+  //         Expanded(
+  //           child: FutureBuilder(
+  //             future: supportedComputers,
+  //             builder: (context, snapshot) {
+  //               if (snapshot.hasError) {
+  //                 return Text('Error: ${snapshot.error}');
+  //               }
+
+  //               if (snapshot.hasData) {
+  //                 final computers = snapshot.data as List<Computer>;
+  //                 return ListView.builder(
+  //                   itemCount: computers.length,
+  //                   itemBuilder: (context, index) {
+  //                     final computer = computers[index];
+  //                     return GestureDetector(
+  //                       onTap: () async {
+  //                         final dives = await dc.download(
+  //                           computer,
+  //                           computer.transports.last,
+  //                           "exampleFingerprint",
+  //                         );
+  //                         // ignore: use_build_context_synchronously
+  //                         ScaffoldMessenger.of(context).showSnackBar(
+  //                           SnackBar(
+  //                             content: Text('Downloaded ${dives.length} dives'),
+  //                           ),
+  //                         );
+  //                       },
+  //                       child: Text(computer.toString()),
+  //                     );
+  //                   },
+  //                 );
+  //               }
+
+  //               return const Text('Loading...');
+  //             },
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
