@@ -34,12 +34,12 @@ class _MyAppState extends State<MyApp> {
     _future =
         Provider.of<BluetoothProvider>(context, listen: false).scanForDevices();
 
-    super.initState();
-
     dc.enableDebugLogging();
     dc.openConnection();
 
     supportedComputers = dc.supportedComputers;
+
+    super.initState();
   }
 
   @override
@@ -48,6 +48,7 @@ class _MyAppState extends State<MyApp> {
     for (var device in FlutterBluePlus.connectedDevices) {
       device.disconnect();
     }
+
     super.dispose();
   }
 
