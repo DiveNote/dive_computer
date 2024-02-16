@@ -31,46 +31,36 @@ class BluetoothProvider with ChangeNotifier {
       _adapterState = state;
 
       if (state == BluetoothAdapterState.on) {
-        //print('Bluetooth adapter is on');
         FlutterBluePlus.startScan(timeout: const Duration(seconds: 15));
 
         try {
           FlutterBluePlus.systemDevices.then((value) {
-            //print('System devices: $value');
             _systemDevices = value;
             notifyListeners();
           });
         } catch (e, s) {
           print('Error while getting system devices: $e, $s');
-          //Snackbar.show(ABC.b, prettyException("System Devices Error:", e), success: false);
         }
       } else {
         print('Bluetooth adapter is ${state.toString().split('.')[1]}');
       }
     }, onError: (e, s) {
       print('Error while listening to adapter state stream: $e, $s');
-      //Snackbar.show(ABC.b, prettyException("Scan Error:", e), success: false);
     });
 
     _scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
       _scanResults = results;
-      //print('Scan result: $results');
       notifyListeners();
     }, onError: (e, s) {
       print('Error while listening to scan results stream: $e, $s');
-      //Snackbar.show(ABC.b, prettyException("Scan Error:", e), success: false);
     });
 
     _isScanningSubscription = FlutterBluePlus.isScanning.listen((state) {
-      //print('Scan state: $state');
       _isScanning = state;
       notifyListeners();
     }, onError: (e, s) {
       print('Error while listening to isScanning stream: $e, $s');
-      //Snackbar.show(ABC.b, prettyException("Scan Error:", e), success: false);
     });
-
-    //FlutterBluePlus.
   }
 
   Future<void> scanForDevices() async {
@@ -78,13 +68,11 @@ class BluetoothProvider with ChangeNotifier {
       print('Scanning for devices...');
       try {
         FlutterBluePlus.systemDevices.then((value) {
-          //print('System devices: $value');
           _systemDevices = value;
           notifyListeners();
         });
       } catch (e, s) {
         print('Error while getting system devices: $e, $s');
-        //Snackbar.show(ABC.b, prettyException("System Devices Error:", e), success: false);
       }
 
       if (_isScanning == false) {
@@ -95,17 +83,10 @@ class BluetoothProvider with ChangeNotifier {
     return Future.delayed(const Duration(milliseconds: 500));
   }
 
-  List<BluetoothDevice> get systemDevices => _systemDevices
-      .where((device) => device.platformName.isNotEmpty) //&&
-      // Constants.bleDevices.any((bleDevice) => device.platformName
-      //     .toLowerCase()
-      //     .contains(bleDevice.toLowerCase())))
-      .toList();
+  List<BluetoothDevice> get systemDevices =>
+      _systemDevices.where((device) => device.platformName.isNotEmpty).toList();
 
   List<ScanResult> get scanResults => _scanResults
-      .where((device) => device.device.platformName.isNotEmpty) //&&
-      // Constants.bleDevices.any((bleDevice) => device.device.platformName
-      //     .toLowerCase()
-      //     .contains(bleDevice.toLowerCase())))
+      .where((device) => device.device.platformName.isNotEmpty)
       .toList();
 }
