@@ -53,6 +53,10 @@ class DiveComputerFfi {
     log.fine('Loading complete');
   }
 
+  void dispose() {
+    _interfaces.dispose();
+  }
+
   static final context = calloc<ffi.Pointer<dc_context_t>>();
 
   static late final ffi.DynamicLibrary _library;
@@ -155,7 +159,7 @@ class DiveComputerFfi {
     final computerDescriptor = _computerDescriptorCache[computer]!;
 
     final ffi.Pointer<dc_iostream_t> iostream =
-        _interfaces.connect(transport, computerDescriptor);
+        _interfaces.connect(computer, transport, computerDescriptor, context);
 
     final device = calloc<ffi.Pointer<dc_device_t>>();
     try {

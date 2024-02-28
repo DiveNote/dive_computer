@@ -1,12 +1,23 @@
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+
 class Computer {
-  Computer(this.vendor, this.product, {this.transports = const []});
+  Computer(
+    this.vendor,
+    this.product, {
+    this.transports = const [],
+  });
 
   final String vendor, product;
   final List<ComputerTransport> transports;
+  BluetoothDevice? device;
+
+  void addBleDevice(BluetoothDevice device) {
+    this.device = device;
+  }
 
   @override
   String toString() =>
-      '$vendor $product [${transports.map((t) => t.name).join(', ')}]';
+      '$vendor $product ${device ?? ''} [${transports.map((t) => t.name).join(', ')}]';
 
   @override
   bool operator ==(Object other) =>
