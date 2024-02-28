@@ -1,6 +1,6 @@
 name: dive_computer
 description: "A Flutter plugin for communication with dive computers."
-version: 0.0.1
+version: 0.1.0-dev.1
 homepage: "https://divenote.app"
 repository: "https://github.com/DiveNote/dive_computer"
 issue_tracker: "https://github.com/DiveNote/dive_computer/issues"

@@ -1,18 +1,17 @@
+import 'dart:developer' as developer;
 import 'dart:ffi' as ffi;
 import 'dart:io';
-import 'dart:developer' as developer;
 
+import 'package:dive_computer/framework/interfaces/dive_computer_interfaces.dart';
+import 'package:dive_computer/framework/utils/transports_bitmask.dart';
+import 'package:dive_computer/framework/utils/utils.dart';
+import 'package:dive_computer/types/computer.dart';
+import 'package:dive_computer/types/dive.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart' as logging;
 
-import './utils/transports_bitmask.dart';
-import './utils/utils.dart';
-import '../types/computer.dart';
-import '../types/dive.dart';
-
 import './dive_computer_ffi_bindings_generated.dart';
-import './interfaces/dive_computer_interfaces.dart';
 
 final log = logging.Logger('DiveComputerFfi');
 
@@ -533,8 +532,8 @@ class DiveComputerFfi {
     var result = StringBuffer();
 
     for (var i = 0; i < fsize; ++i) {
-      var msn = (fingerprint.elementAt(i).value >> 4) & 0x0F;
-      var lsn = fingerprint.elementAt(i).value & 0x0F;
+      var msn = ((fingerprint + i).value >> 4) & 0x0F;
+      var lsn = (fingerprint + i).value & 0x0F;
 
       result.writeCharCode(ascii[msn]);
       result.writeCharCode(ascii[lsn]);
