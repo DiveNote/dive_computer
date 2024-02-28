@@ -26,8 +26,7 @@ DiveComputer FFI plugin for Flutter.
   s.pod_target_xcconfig = { 
     'DEFINES_MODULE' => 'YES', 
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
-    'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/../src/libdivecomputer/include"',
   }
-
+  
   s.swift_version = '5.0'
 end

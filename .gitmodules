@@ -1,3 +1,9 @@
 [submodule "src/libdivecomputer"]
 	path = src/libdivecomputer
 	url = https://github.com/libdivecomputer/libdivecomputer.git
+[submodule "src/hidapi"]
+	path = src/hidapi
+	url = https://github.com/libusb/hidapi.git
+[submodule "src/libusb"]
+	path = src/libusb
+	url = https://github.com/libusb/libusb.git

@@ -1,16 +1,17 @@
-import 'dart:async';
+import 'dart:developer' as developer;
 import 'dart:ffi' as ffi;
 import 'dart:io';
-import 'dart:developer' as developer;
 
+import 'package:dive_computer/framework/interfaces/dive_computer_interfaces.dart';
 import 'package:dive_computer/framework/utils/transports_bitmask.dart';
+import 'package:dive_computer/framework/utils/utils.dart';
 import 'package:dive_computer/types/computer.dart';
 import 'package:dive_computer/types/dive.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart' as logging;
 
-import 'dive_computer_ffi_bindings_generated.dart';
+import './dive_computer_ffi_bindings_generated.dart';
 
 final log = logging.Logger('DiveComputerFfi');
 
@@ -63,25 +64,28 @@ class DiveComputerFfi {
 
   static Function(List<Dive>)? divesCallback;
 
+  static final _interfaces =
+      Interfaces(bindings: _bindings, context: context, log: log);
+
   static void enableDebugLogging([logging.Level level = logging.Level.INFO]) {
     log.level = level;
   }
 
   static void openConnection() {
-    _handleResult(
+    handleResult(
       _bindings.dc_context_new(context),
       'context creation',
     );
 
-    _handleResult(
+    handleResult(
       _bindings.dc_context_set_loglevel(
         context.value,
-        dc_loglevel_t.DC_LOGLEVEL_WARNING,
+        dc_loglevel_t.DC_LOGLEVEL_ALL,
       ),
       'log level setting',
     );
 
-    _handleResult(
+    handleResult(
       _bindings.dc_context_set_logfunc(
         context.value,
         ffi.Pointer.fromFunction(_log),
@@ -92,7 +96,7 @@ class DiveComputerFfi {
   }
 
   static void closeConnection() {
-    _handleResult(
+    handleResult(
       _bindings.dc_context_free(context.value),
       'context freeing',
     );
@@ -107,7 +111,7 @@ class DiveComputerFfi {
 
     final iterator = calloc<ffi.Pointer<dc_iterator_t>>();
 
-    _handleResult(
+    handleResult(
       _bindings.dc_descriptor_iterator(iterator),
       'iterator creation',
     );
@@ -133,9 +137,9 @@ class DiveComputerFfi {
       computers.add(computer);
       _computerDescriptorCache.addEntries([MapEntry(computer, desc.value)]);
     }
-    _handleResult(result, 'iterator next');
+    handleResult(result, 'iterator next');
 
-    _handleResult(
+    handleResult(
       _bindings.dc_iterator_free(iterator.value),
       'iterator freeing',
     );
@@ -150,18 +154,12 @@ class DiveComputerFfi {
   ]) {
     final computerDescriptor = _computerDescriptorCache[computer]!;
 
-    final ffi.Pointer<dc_iostream_t> iostream;
-    switch (transport) {
-      case ComputerTransport.serial:
-        iostream = _connectSerial(computerDescriptor);
-        break;
-      default:
-        throw UnimplementedError();
-    }
+    final ffi.Pointer<dc_iostream_t> iostream =
+        _interfaces.connect(transport, computerDescriptor);
 
     final device = calloc<ffi.Pointer<dc_device_t>>();
     try {
-      _handleResult(
+      handleResult(
         _bindings.dc_device_open(
           device,
           context.value,
@@ -177,7 +175,7 @@ class DiveComputerFfi {
           lastFingerprint?.toNativeUtf8() ?? ffi.nullptr;
 
       _divesCache.clear();
-      _handleResult(
+      handleResult(
         _bindings.dc_device_foreach(
           device.value,
           ffi.Pointer.fromFunction(_dive_callback, 0),
@@ -191,66 +189,16 @@ class DiveComputerFfi {
       }
       divesCallback?.call(_divesCache);
 
-      _handleResult(
+      handleResult(
         _bindings.dc_device_close(device.value),
         'device close',
       );
     } finally {
-      _handleResult(
+      handleResult(
         _bindings.dc_iostream_close(iostream),
         'iostream close',
       );
     }
-  }
-
-  static ffi.Pointer<dc_iostream_t> _connectSerial(
-      ffi.Pointer<dc_descriptor_t> computer) {
-    final iterator = calloc<ffi.Pointer<dc_iterator_t>>();
-
-    _handleResult(
-      _bindings.dc_serial_iterator_new(iterator, context.value, computer),
-      'serial connection',
-    );
-
-    final names = <ffi.Pointer<Utf8>>[];
-
-    int result;
-    final desc = calloc<ffi.Pointer<dc_serial_device_t>>();
-    while ((result = _bindings.dc_iterator_next(iterator.value, desc.cast())) ==
-        dc_status_t.DC_STATUS_SUCCESS) {
-      final ffi.Pointer<Utf8> name =
-          _bindings.dc_serial_device_get_name(desc.value).cast();
-      names.add(name);
-
-      _bindings.dc_serial_device_free(desc.value);
-    }
-    _handleResult(result, 'iterator next');
-    log.info(
-      'Serial devices: ${names.map((e) => e.toDartString()).join(', ')}',
-    );
-
-    _handleResult(
-      _bindings.dc_iterator_free(iterator.value),
-      'iterator freeing',
-    );
-
-    if (names.isEmpty) {
-      _handleResult(dc_status_t.DC_STATUS_NODEVICE);
-    }
-
-    // ### Connecting to the device ### //
-    final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
-
-    _handleResult(
-      _bindings.dc_serial_open(
-        iostream,
-        context.value,
-        names[0].cast(),
-      ),
-      'serial open',
-    );
-
-    return iostream.value;
   }
 
   // ignore: non_constant_identifier_names
@@ -292,7 +240,7 @@ class DiveComputerFfi {
 
     final parser = malloc<ffi.Pointer<dc_parser_t>>();
 
-    _handleResult(_bindings.dc_parser_new(
+    handleResult(_bindings.dc_parser_new(
       parser,
       device,
       data,
@@ -346,7 +294,7 @@ class DiveComputerFfi {
     }
 
     final dateTimePointer = malloc<dc_datetime_t>();
-    _handleResult(
+    handleResult(
       _bindings.dc_parser_get_datetime(parser.value, dateTimePointer),
     );
     final dateTime = DateTime(
@@ -360,7 +308,7 @@ class DiveComputerFfi {
 
     try {
       _samplesCache.clear();
-      _handleResult(
+      handleResult(
         _bindings.dc_parser_samples_foreach(
           parser.value,
           ffi.Pointer.fromFunction(_sample_callback),
@@ -390,7 +338,7 @@ class DiveComputerFfi {
     log.info(dive);
     _divesCache.add(dive);
 
-    _handleResult(_bindings.dc_parser_destroy(parser.value));
+    handleResult(_bindings.dc_parser_destroy(parser.value));
   }
 
   static T? _parseField<T>(
@@ -421,7 +369,7 @@ class DiveComputerFfi {
     }
 
     try {
-      _handleResult(_bindings.dc_parser_get_field(
+      handleResult(_bindings.dc_parser_get_field(
         parser,
         fieldType,
         flags,
@@ -577,40 +525,6 @@ class DiveComputerFfi {
     log.fine('[native] ${message.cast<Utf8>().toDartString()}');
   }
 
-  static void _handleResult(int result, [String operation = '']) {
-    switch (result) {
-      case dc_status_t.DC_STATUS_SUCCESS:
-        if (operation.isNotEmpty) {
-          log.finer('$operation successful');
-        }
-      case dc_status_t.DC_STATUS_DONE:
-        if (operation.isNotEmpty) {
-          log.finer('$operation done');
-        }
-        break;
-      case dc_status_t.DC_STATUS_UNSUPPORTED:
-        throw UnsupportedError('Unsupported');
-      case dc_status_t.DC_STATUS_INVALIDARGS:
-        throw ArgumentError('Invalid arguments');
-      case dc_status_t.DC_STATUS_TIMEOUT:
-        throw TimeoutException("Timeout");
-      case dc_status_t.DC_STATUS_NOMEMORY:
-        throw const OutOfMemoryError();
-      case dc_status_t.DC_STATUS_NODEVICE:
-        throw Exception("No device");
-      case dc_status_t.DC_STATUS_NOACCESS:
-        throw Exception("No access");
-      case dc_status_t.DC_STATUS_IO:
-        throw Exception("IO");
-      case dc_status_t.DC_STATUS_PROTOCOL:
-        throw Exception("Protocol");
-      case dc_status_t.DC_STATUS_DATAFORMAT:
-        throw Exception("Data format");
-      case dc_status_t.DC_STATUS_CANCELLED:
-        throw Exception("Cancelled");
-    }
-  }
-
   static String _buildFingerprintHash(
       ffi.Pointer<ffi.UnsignedChar> fingerprint, int fsize) {
     final ascii = '0123456789ABCDEF'.codeUnits;
@@ -618,8 +532,8 @@ class DiveComputerFfi {
     var result = StringBuffer();
 
     for (var i = 0; i < fsize; ++i) {
-      var msn = (fingerprint.elementAt(i).value >> 4) & 0x0F;
-      var lsn = fingerprint.elementAt(i).value & 0x0F;
+      var msn = ((fingerprint + i).value >> 4) & 0x0F;
+      var lsn = (fingerprint + i).value & 0x0F;
 
       result.writeCharCode(ascii[msn]);
       result.writeCharCode(ascii[lsn]);
