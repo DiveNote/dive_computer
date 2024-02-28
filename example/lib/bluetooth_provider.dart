@@ -1,43 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dive_computer/dive_computer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-
-// https://doc.qt.io/qt-6/qbluetoothuuid.html#DescriptorType-enum
-enum DescriptorType {
-  CharacteristicExtendedProperties,
-  CharacteristicUserDescription,
-  ClientCharacteristicConfiguration,
-  ServerCharacteristicConfiguration,
-  CharacteristicPresentationFormat,
-  CharacteristicAggregateFormat,
-  ValidRange,
-  ExternalReportReference,
-  ReportReference,
-  EnvironmentalSensingConfiguration,
-  EnvironmentalSensingMeasurement,
-  EnvironmentalSensingTriggerSetting,
-  UnknownDescriptorType,
-}
-
-final Map<DescriptorType, Guid> DescriptorTypeValues = {
-  // DescriptorType.CharacteristicExtendedProperties: 2900,
-  // DescriptorType.CharacteristicUserDescription: 2901,
-  DescriptorType.ClientCharacteristicConfiguration:
-      Guid("00002902-0000-1000-8000-00805f9b34fb"),
-  // DescriptorType.ServerCharacteristicConfiguration: 2903,
-  // DescriptorType.CharacteristicPresentationFormat: 2904,
-  // DescriptorType.CharacteristicAggregateFormat: 2905,
-  // DescriptorType.ValidRange: 2906,
-  // DescriptorType.ExternalReportReference: 2907,
-  // DescriptorType.ReportReference: 2908,
-  // DescriptorType.EnvironmentalSensingConfiguration:,
-  // DescriptorType.EnvironmentalSensingMeasurement:,
-  // DescriptorType.EnvironmentalSensingTriggerSetting:,
-  // DescriptorType.UnknownDescriptorType:,
-};
 
 class BluetoothProvider with ChangeNotifier {
   BluetoothAdapterState _adapterState = BluetoothAdapterState.unknown;
