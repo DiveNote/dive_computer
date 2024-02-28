@@ -1,6 +1,6 @@
+import 'dart:developer' as developer;
 import 'dart:ffi' as ffi;
 import 'dart:io';
-import 'dart:developer' as developer;
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
@@ -536,8 +536,8 @@ class DiveComputerFfi {
     var result = StringBuffer();
 
     for (var i = 0; i < fsize; ++i) {
-      var msn = (fingerprint.elementAt(i).value >> 4) & 0x0F;
-      var lsn = fingerprint.elementAt(i).value & 0x0F;
+      var msn = ((fingerprint + i).value >> 4) & 0x0F;
+      var lsn = (fingerprint + i).value & 0x0F;
 
       result.writeCharCode(ascii[msn]);
       result.writeCharCode(ascii[lsn]);
