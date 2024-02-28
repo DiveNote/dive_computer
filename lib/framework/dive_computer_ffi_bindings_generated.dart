@@ -1508,6 +1508,229 @@ class DiveComputerFfiBindings {
           'dc_parser_destroy');
   late final _dc_parser_destroy = _dc_parser_destroyPtr
       .asFunction<int Function(ffi.Pointer<dc_parser_t>)>();
+
+  /// Get the vendor id (VID) of the USB device.
+  ///
+  /// @param[in]  device  A valid USB device.
+  int dc_usb_device_get_vid(
+    ffi.Pointer<dc_usb_device_t> device,
+  ) {
+    return _dc_usb_device_get_vid(
+      device,
+    );
+  }
+
+  late final _dc_usb_device_get_vidPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.UnsignedInt Function(
+              ffi.Pointer<dc_usb_device_t>)>>('dc_usb_device_get_vid');
+  late final _dc_usb_device_get_vid = _dc_usb_device_get_vidPtr
+      .asFunction<int Function(ffi.Pointer<dc_usb_device_t>)>();
+
+  /// Get the product id (PID) of the USB device.
+  ///
+  /// @param[in]  device  A valid USB device.
+  int dc_usb_device_get_pid(
+    ffi.Pointer<dc_usb_device_t> device,
+  ) {
+    return _dc_usb_device_get_pid(
+      device,
+    );
+  }
+
+  late final _dc_usb_device_get_pidPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.UnsignedInt Function(
+              ffi.Pointer<dc_usb_device_t>)>>('dc_usb_device_get_pid');
+  late final _dc_usb_device_get_pid = _dc_usb_device_get_pidPtr
+      .asFunction<int Function(ffi.Pointer<dc_usb_device_t>)>();
+
+  /// Destroy the USB device and free all resources.
+  ///
+  /// @param[in]  device  A valid USB device.
+  void dc_usb_device_free(
+    ffi.Pointer<dc_usb_device_t> device,
+  ) {
+    return _dc_usb_device_free(
+      device,
+    );
+  }
+
+  late final _dc_usb_device_freePtr = _lookup<
+          ffi.NativeFunction<ffi.Void Function(ffi.Pointer<dc_usb_device_t>)>>(
+      'dc_usb_device_free');
+  late final _dc_usb_device_free = _dc_usb_device_freePtr
+      .asFunction<void Function(ffi.Pointer<dc_usb_device_t>)>();
+
+  /// Create an iterator to enumerate the USB devices.
+  ///
+  /// @param[out] iterator    A location to store the iterator.
+  /// @param[in]  context     A valid context object.
+  /// @param[in]  descriptor  A valid device descriptor or NULL.
+  /// @returns #DC_STATUS_SUCCESS on success, or another #dc_status_t code
+  /// on failure.
+  int dc_usb_iterator_new(
+    ffi.Pointer<ffi.Pointer<dc_iterator_t>> iterator,
+    ffi.Pointer<dc_context_t> context,
+    ffi.Pointer<dc_descriptor_t> descriptor,
+  ) {
+    return _dc_usb_iterator_new(
+      iterator,
+      context,
+      descriptor,
+    );
+  }
+
+  late final _dc_usb_iterator_newPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Pointer<dc_iterator_t>>,
+              ffi.Pointer<dc_context_t>,
+              ffi.Pointer<dc_descriptor_t>)>>('dc_usb_iterator_new');
+  late final _dc_usb_iterator_new = _dc_usb_iterator_newPtr.asFunction<
+      int Function(ffi.Pointer<ffi.Pointer<dc_iterator_t>>,
+          ffi.Pointer<dc_context_t>, ffi.Pointer<dc_descriptor_t>)>();
+
+  /// Open a USB connection.
+  ///
+  /// @param[out]  iostream A location to store the USB connection.
+  /// @param[in]   context  A valid context object.
+  /// @param[in]   device   A valid USB device.
+  /// @returns #DC_STATUS_SUCCESS on success, or another #dc_status_t code
+  /// on failure.
+  int dc_usb_open(
+    ffi.Pointer<ffi.Pointer<dc_iostream_t>> iostream,
+    ffi.Pointer<dc_context_t> context,
+    ffi.Pointer<dc_usb_device_t> device,
+  ) {
+    return _dc_usb_open(
+      iostream,
+      context,
+      device,
+    );
+  }
+
+  late final _dc_usb_openPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
+              ffi.Pointer<dc_context_t>,
+              ffi.Pointer<dc_usb_device_t>)>>('dc_usb_open');
+  late final _dc_usb_open = _dc_usb_openPtr.asFunction<
+      int Function(ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
+          ffi.Pointer<dc_context_t>, ffi.Pointer<dc_usb_device_t>)>();
+
+  /// Get the vendor id (VID) of the USB HID device.
+  ///
+  /// @param[in]  device  A valid USB HID device.
+  int dc_usbhid_device_get_vid(
+    ffi.Pointer<dc_usbhid_device_t> device,
+  ) {
+    return _dc_usbhid_device_get_vid(
+      device,
+    );
+  }
+
+  late final _dc_usbhid_device_get_vidPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.UnsignedInt Function(
+              ffi.Pointer<dc_usbhid_device_t>)>>('dc_usbhid_device_get_vid');
+  late final _dc_usbhid_device_get_vid = _dc_usbhid_device_get_vidPtr
+      .asFunction<int Function(ffi.Pointer<dc_usbhid_device_t>)>();
+
+  /// Get the product id (PID) of the USB HID device.
+  ///
+  /// @param[in]  device  A valid USB HID device.
+  int dc_usbhid_device_get_pid(
+    ffi.Pointer<dc_usbhid_device_t> device,
+  ) {
+    return _dc_usbhid_device_get_pid(
+      device,
+    );
+  }
+
+  late final _dc_usbhid_device_get_pidPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.UnsignedInt Function(
+              ffi.Pointer<dc_usbhid_device_t>)>>('dc_usbhid_device_get_pid');
+  late final _dc_usbhid_device_get_pid = _dc_usbhid_device_get_pidPtr
+      .asFunction<int Function(ffi.Pointer<dc_usbhid_device_t>)>();
+
+  /// Destroy the USB HID device and free all resources.
+  ///
+  /// @param[in]  device  A valid USB HID device.
+  void dc_usbhid_device_free(
+    ffi.Pointer<dc_usbhid_device_t> device,
+  ) {
+    return _dc_usbhid_device_free(
+      device,
+    );
+  }
+
+  late final _dc_usbhid_device_freePtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Void Function(ffi.Pointer<dc_usbhid_device_t>)>>(
+      'dc_usbhid_device_free');
+  late final _dc_usbhid_device_free = _dc_usbhid_device_freePtr
+      .asFunction<void Function(ffi.Pointer<dc_usbhid_device_t>)>();
+
+  /// Create an iterator to enumerate the USB HID devices.
+  ///
+  /// @param[out] iterator    A location to store the iterator.
+  /// @param[in]  context     A valid context object.
+  /// @param[in]  descriptor  A valid device descriptor or NULL.
+  /// @returns #DC_STATUS_SUCCESS on success, or another #dc_status_t code
+  /// on failure.
+  int dc_usbhid_iterator_new(
+    ffi.Pointer<ffi.Pointer<dc_iterator_t>> iterator,
+    ffi.Pointer<dc_context_t> context,
+    ffi.Pointer<dc_descriptor_t> descriptor,
+  ) {
+    return _dc_usbhid_iterator_new(
+      iterator,
+      context,
+      descriptor,
+    );
+  }
+
+  late final _dc_usbhid_iterator_newPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Pointer<dc_iterator_t>>,
+              ffi.Pointer<dc_context_t>,
+              ffi.Pointer<dc_descriptor_t>)>>('dc_usbhid_iterator_new');
+  late final _dc_usbhid_iterator_new = _dc_usbhid_iterator_newPtr.asFunction<
+      int Function(ffi.Pointer<ffi.Pointer<dc_iterator_t>>,
+          ffi.Pointer<dc_context_t>, ffi.Pointer<dc_descriptor_t>)>();
+
+  /// Open a USB HID connection.
+  ///
+  /// @param[out]  iostream A location to store the USB HID connection.
+  /// @param[in]   context  A valid context object.
+  /// @param[in]   device   A valid USB HID device.
+  /// @returns #DC_STATUS_SUCCESS on success, or another #dc_status_t code
+  /// on failure.
+  int dc_usbhid_open(
+    ffi.Pointer<ffi.Pointer<dc_iostream_t>> iostream,
+    ffi.Pointer<dc_context_t> context,
+    ffi.Pointer<dc_usbhid_device_t> device,
+  ) {
+    return _dc_usbhid_open(
+      iostream,
+      context,
+      device,
+    );
+  }
+
+  late final _dc_usbhid_openPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
+              ffi.Pointer<dc_context_t>,
+              ffi.Pointer<dc_usbhid_device_t>)>>('dc_usbhid_open');
+  late final _dc_usbhid_open = _dc_usbhid_openPtr.asFunction<
+      int Function(ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
+          ffi.Pointer<dc_context_t>, ffi.Pointer<dc_usbhid_device_t>)>();
 }
 
 abstract class dc_status_t {
@@ -1644,23 +1867,16 @@ abstract class dc_loglevel_t {
   static const int DC_LOGLEVEL_ALL = 5;
 }
 
-typedef dc_logfunc_t = ffi.Pointer<ffi.NativeFunction<dc_logfunc_tFunction>>;
-typedef dc_logfunc_tFunction = ffi.Void Function(
-    ffi.Pointer<dc_context_t> context,
-    ffi.Int32 loglevel,
-    ffi.Pointer<ffi.Char> file,
-    ffi.UnsignedInt line,
-    ffi.Pointer<ffi.Char> function,
-    ffi.Pointer<ffi.Char> message,
-    ffi.Pointer<ffi.Void> userdata);
-typedef Dartdc_logfunc_tFunction = void Function(
-    ffi.Pointer<dc_context_t> context,
-    int loglevel,
-    ffi.Pointer<ffi.Char> file,
-    int line,
-    ffi.Pointer<ffi.Char> function,
-    ffi.Pointer<ffi.Char> message,
-    ffi.Pointer<ffi.Void> userdata);
+typedef dc_logfunc_t = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Void Function(
+            ffi.Pointer<dc_context_t> context,
+            ffi.Int32 loglevel,
+            ffi.Pointer<ffi.Char> file,
+            ffi.UnsignedInt line,
+            ffi.Pointer<ffi.Char> function,
+            ffi.Pointer<ffi.Char> message,
+            ffi.Pointer<ffi.Void> userdata)>>;
 
 final class dc_iterator_t extends ffi.Opaque {}
 
@@ -1860,7 +2076,6 @@ final class dc_datetime_t extends ffi.Struct {
 }
 
 typedef dc_ticks_t = ffi.LongLong;
-typedef Dartdc_ticks_t = int;
 
 abstract class dc_event_type_t {
   static const int DC_EVENT_WAITING = 1;
@@ -1906,38 +2121,20 @@ final class dc_event_vendor_t extends ffi.Struct {
   external int size;
 }
 
-typedef dc_cancel_callback_t
-    = ffi.Pointer<ffi.NativeFunction<dc_cancel_callback_tFunction>>;
-typedef dc_cancel_callback_tFunction = ffi.Int Function(
-    ffi.Pointer<ffi.Void> userdata);
-typedef Dartdc_cancel_callback_tFunction = int Function(
-    ffi.Pointer<ffi.Void> userdata);
-typedef dc_event_callback_t
-    = ffi.Pointer<ffi.NativeFunction<dc_event_callback_tFunction>>;
-typedef dc_event_callback_tFunction = ffi.Void Function(
-    ffi.Pointer<dc_device_t> device,
-    ffi.Int32 event,
-    ffi.Pointer<ffi.Void> data,
-    ffi.Pointer<ffi.Void> userdata);
-typedef Dartdc_event_callback_tFunction = void Function(
-    ffi.Pointer<dc_device_t> device,
-    int event,
-    ffi.Pointer<ffi.Void> data,
-    ffi.Pointer<ffi.Void> userdata);
-typedef dc_dive_callback_t
-    = ffi.Pointer<ffi.NativeFunction<dc_dive_callback_tFunction>>;
-typedef dc_dive_callback_tFunction = ffi.Int Function(
-    ffi.Pointer<ffi.UnsignedChar> data,
-    ffi.UnsignedInt size,
-    ffi.Pointer<ffi.UnsignedChar> fingerprint,
-    ffi.UnsignedInt fsize,
-    ffi.Pointer<ffi.Void> userdata);
-typedef Dartdc_dive_callback_tFunction = int Function(
-    ffi.Pointer<ffi.UnsignedChar> data,
-    int size,
-    ffi.Pointer<ffi.UnsignedChar> fingerprint,
-    int fsize,
-    ffi.Pointer<ffi.Void> userdata);
+typedef dc_cancel_callback_t = ffi.Pointer<
+    ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void> userdata)>>;
+typedef dc_event_callback_t = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Void Function(ffi.Pointer<dc_device_t> device, ffi.Int32 event,
+            ffi.Pointer<ffi.Void> data, ffi.Pointer<ffi.Void> userdata)>>;
+typedef dc_dive_callback_t = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Int Function(
+            ffi.Pointer<ffi.UnsignedChar> data,
+            ffi.UnsignedInt size,
+            ffi.Pointer<ffi.UnsignedChar> fingerprint,
+            ffi.UnsignedInt fsize,
+            ffi.Pointer<ffi.Void> userdata)>>;
 
 final class dc_serial_device_t extends ffi.Opaque {}
 
@@ -2276,12 +2473,72 @@ final class UnnamedStruct6 extends ffi.Struct {
 
 final class dc_parser_t extends ffi.Opaque {}
 
-typedef dc_sample_callback_t
-    = ffi.Pointer<ffi.NativeFunction<dc_sample_callback_tFunction>>;
-typedef dc_sample_callback_tFunction = ffi.Void Function(ffi.Int32 type,
-    ffi.Pointer<dc_sample_value_t> value, ffi.Pointer<ffi.Void> userdata);
-typedef Dartdc_sample_callback_tFunction = void Function(int type,
-    ffi.Pointer<dc_sample_value_t> value, ffi.Pointer<ffi.Void> userdata);
+typedef dc_sample_callback_t = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Void Function(ffi.Int32 type, ffi.Pointer<dc_sample_value_t> value,
+            ffi.Pointer<ffi.Void> userdata)>>;
+
+/// USB control transfer.
+final class dc_usb_control_t extends ffi.Struct {
+  @ffi.UnsignedChar()
+  external int bmRequestType;
+
+  @ffi.UnsignedChar()
+  external int bRequest;
+
+  @ffi.UnsignedShort()
+  external int wValue;
+
+  @ffi.UnsignedShort()
+  external int wIndex;
+
+  @ffi.UnsignedShort()
+  external int wLength;
+}
+
+/// Endpoint direction bits of the USB control transfer.
+abstract class dc_usb_endpoint_t {
+  static const int DC_USB_ENDPOINT_OUT = 0;
+  static const int DC_USB_ENDPOINT_IN = 128;
+}
+
+/// Request type bits of the USB control transfer.
+abstract class dc_usb_request_t {
+  static const int DC_USB_REQUEST_STANDARD = 0;
+  static const int DC_USB_REQUEST_CLASS = 32;
+  static const int DC_USB_REQUEST_VENDOR = 64;
+  static const int DC_USB_REQUEST_RESERVED = 96;
+}
+
+/// Recipient bits of the USB control transfer.
+abstract class dc_usb_recipient_t {
+  static const int DC_USB_RECIPIENT_DEVICE = 0;
+  static const int DC_USB_RECIPIENT_INTERFACE = 1;
+  static const int DC_USB_RECIPIENT_ENDPOINT = 2;
+  static const int DC_USB_RECIPIENT_OTHER = 3;
+}
+
+/// USB device descriptor.
+final class dc_usb_desc_t extends ffi.Struct {
+  @ffi.UnsignedShort()
+  external int vid;
+
+  @ffi.UnsignedShort()
+  external int pid;
+}
+
+final class dc_usb_device_t extends ffi.Opaque {}
+
+/// USB HID device descriptor.
+final class dc_usbhid_desc_t extends ffi.Struct {
+  @ffi.UnsignedShort()
+  external int vid;
+
+  @ffi.UnsignedShort()
+  external int pid;
+}
+
+final class dc_usbhid_device_t extends ffi.Opaque {}
 
 const int __DARWIN_ONLY_64_BIT_INO_T = 1;
 
@@ -2602,3 +2859,7 @@ const int DC_DIVEMODE_CC = 3;
 const int DC_SENSOR_NONE = 4294967295;
 
 const int DC_GASMIX_UNKNOWN = 4294967295;
+
+const int DC_IOCTL_USB_CONTROL_READ = 1073771776;
+
+const int DC_IOCTL_USB_CONTROL_WRITE = 2147513600;

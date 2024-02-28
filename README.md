@@ -17,6 +17,14 @@ This plugin automatically spawns its own isolate for communication with the dive
 
 Please refer to the example app for a minimalistic example usage.
 
+# macOS
+
+This plugin supports USB and Serial connection on macOS. On macOS you need to make sure the app has access to the USB connection granted. To do so add the following snippet to info.plist and make sure you grant USB access in xcode via `Signing & Capabilities -> Hardware -> USB`.
+```
+<key>NSUSBPeripheralUsageDescription</key>
+<string>Your explanation here</string>
+```
+
 ---
 
 ### Acknowledgements

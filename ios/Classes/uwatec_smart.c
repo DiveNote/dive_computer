@@ -1,1 +1,0 @@
-#include "../../src/libdivecomputer/src/uwatec_smart.c"
