@@ -39,7 +39,7 @@ class Interfaces {
       case ComputerTransport.usbhid:
         return _connectUsbHid(computerDescriptor);
       case ComputerTransport.ble:
-        return _connectBle(computer, computerDescriptor, context);
+        return _connectBle(computer, context);
       default:
         throw UnimplementedError();
     }
@@ -197,7 +197,6 @@ class Interfaces {
 
   ffi.Pointer<dc_iostream_t> _connectBle(
     Computer computer,
-    ffi.Pointer<dc_descriptor_t> computerDescriptor,
     ffi.Pointer<ffi.Pointer<dc_context_t>> context,
   ) {
     handleResult(

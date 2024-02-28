@@ -17,7 +17,7 @@ class Computer {
 
   @override
   String toString() =>
-      '$vendor $product ${device ?? ''} [${transports.map((t) => t.name).join(', ')}]';
+      '$vendor $product ${device != null ? device.toString() : ''} [${transports.map((t) => t.name).join(', ')}]';
 
   @override
   bool operator ==(Object other) =>
@@ -25,7 +25,8 @@ class Computer {
       other is Computer &&
           runtimeType == other.runtimeType &&
           vendor == other.vendor &&
-          product == other.product;
+          product == other.product &&
+          device == other.device;
 
   @override
   int get hashCode {
