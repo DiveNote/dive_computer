@@ -1,23 +1,43 @@
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
+class BluetoothDeviceCache {
+  final _cache = <int, BluetoothDevice?>{};
+  int _bluetoothDeviceId = -1;
+
+  BluetoothDeviceCache._privateConstructor();
+
+  static final BluetoothDeviceCache _instance =
+      BluetoothDeviceCache._privateConstructor();
+
+  factory BluetoothDeviceCache() {
+    return _instance;
+  }
+
+  void addBluetoothDevice(BluetoothDevice device) {
+    _cache[device.hashCode] = device;
+    _bluetoothDeviceId = device.hashCode;
+  }
+
+  BluetoothDevice? getBluetoothDevice() {
+    return _cache[_bluetoothDeviceId];
+  }
+}
+
+final BluetoothDeviceCache bluetoothDeviceCache = BluetoothDeviceCache();
+
 class Computer {
+  final String vendor, product;
+  final List<ComputerTransport> transports;
+
   Computer(
     this.vendor,
     this.product, {
     this.transports = const [],
   });
 
-  final String vendor, product;
-  final List<ComputerTransport> transports;
-  BluetoothDevice? device;
-
-  void addBleDevice(BluetoothDevice device) {
-    this.device = device;
-  }
-
   @override
   String toString() =>
-      '$vendor $product ${device != null ? device.toString() : ''} [${transports.map((t) => t.name).join(', ')}]';
+      '$vendor $product [${transports.map((t) => t.name).join(', ')}]';
 
   @override
   bool operator ==(Object other) =>
@@ -25,8 +45,7 @@ class Computer {
       other is Computer &&
           runtimeType == other.runtimeType &&
           vendor == other.vendor &&
-          product == other.product &&
-          device == other.device;
+          product == other.product;
 
   @override
   int get hashCode {

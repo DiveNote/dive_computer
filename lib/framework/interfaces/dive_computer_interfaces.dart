@@ -1,5 +1,6 @@
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:logging/logging.dart' as logging;
 
 import '../utils/utils.dart';
@@ -199,8 +200,10 @@ class Interfaces {
     Computer computer,
     ffi.Pointer<ffi.Pointer<dc_context_t>> context,
   ) {
+    BluetoothDevice? device = bluetoothDeviceCache.getBluetoothDevice();
+
     handleResult(
-        computer.device == null
+        device == null || device.platformName.isEmpty
             ? dc_status_t.DC_STATUS_NODEVICE
             : dc_status_t.DC_STATUS_SUCCESS,
         'No device found');
@@ -223,20 +226,20 @@ class Interfaces {
     //                      1. dc_iostream_allocate, custom.c line 84 <- LIBDIVECOMPUTER
 
     final iostream = calloc<ffi.Pointer<dc_iostream_t>>();
-    _bleOpen(computer, context, iostream);
+    _bleOpen(device!, context, iostream);
 
-    log.info('Opening BLE device for ${computer.device!.platformName}');
+    log.info('Opening BLE device for ${device.platformName}');
 
     return iostream.value;
   }
 
   void _bleOpen(
-    Computer computer,
+    BluetoothDevice device,
     ffi.Pointer<ffi.Pointer<dc_context_t>> context,
     ffi.Pointer<ffi.Pointer<dc_iostream_t>> iostream,
   ) async {
     int status = dc_status_t.DC_STATUS_SUCCESS;
-    _bleObject.selectPreferredService(computer.device!, status);
+    _bleObject.selectPreferredService(device, status);
     handleResult(status, 'select preferred service');
 
     _bleObject.enableNotifications(status);

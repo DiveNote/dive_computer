@@ -220,7 +220,7 @@ class _MyAppState extends State<MyApp> {
                             //            III. in case no dump dc_device_foreach, libdivecomputer.c line 1210 <- LIBDIVECOMPUTER
 
                             // Download dives from device
-                            computer.addBleDevice(device);
+                            bluetoothDeviceCache.addBluetoothDevice(device);
                             final dives = await dc.download(
                               computer,
                               transport,
