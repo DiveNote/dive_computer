@@ -102,6 +102,7 @@ class _MyAppState extends State<MyApp> {
                           final dives = await dc.download(
                             computer,
                             computer.transports.first,
+                            null,
                             "exampleFingerprint",
                           );
                           // ignore: use_build_context_synchronously
@@ -220,10 +221,10 @@ class _MyAppState extends State<MyApp> {
                             //            III. in case no dump dc_device_foreach, libdivecomputer.c line 1210 <- LIBDIVECOMPUTER
 
                             // Download dives from device
-                            bluetoothDeviceCache.addBluetoothDevice(device);
                             final dives = await dc.download(
                               computer,
                               transport,
+                              device,
                               "exampleFingerprint",
                             );
 

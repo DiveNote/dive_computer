@@ -7,6 +7,7 @@ import 'package:dive_computer/framework/dive_computer_ffi.dart';
 import 'package:dive_computer/types/computer.dart';
 import 'package:dive_computer/types/dive.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:logging/logging.dart';
 
 enum DiveComputerMethod {
@@ -88,12 +89,13 @@ class DiveComputer implements DiveComputerInterface {
   @override
   Future<List<Dive>> download(
     Computer computer,
-    ComputerTransport transport, [
+    ComputerTransport transport,
+    BluetoothDevice? device, [
     String? lastFingerprint,
   ]) async {
     await _send((
       DiveComputerMethod.download,
-      [computer, transport, lastFingerprint],
+      [computer, transport, device, lastFingerprint],
     ));
     return (_downloadedDives = Completer()).future;
   }
@@ -134,11 +136,17 @@ _spawnIsolate(SendPort sendPort) {
         case DiveComputerMethod.download:
           final computer = message.$2[0] as Computer;
           final transport = message.$2[1] as ComputerTransport;
-          final lastFingerprint = message.$2[2] as String?;
+          final device = message.$2[2] as BluetoothDevice?;
+          final lastFingerprint = message.$2[3] as String?;
           DiveComputerFfi.divesCallback = (dives) {
             sendPort.send(dives);
           };
-          DiveComputerFfi.download(computer, transport, lastFingerprint);
+          DiveComputerFfi.download(
+            computer,
+            transport,
+            device,
+            lastFingerprint,
+          );
           break;
         default:
           throw UnimplementedError('Message not implemented: $message');

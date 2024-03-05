@@ -16,6 +16,7 @@ headers:
     - 'src/libdivecomputer/include/libdivecomputer/ble.h'
     - 'src/libdivecomputer/include/libdivecomputer/bluetooth.h'
     - 'src/libdivecomputer/include/libdivecomputer/custom.h'
+    - 'src/libdivecomputer/src/iostream-private.h'
 preamble: |
   // ignore_for_file: always_specify_types, unused_field, unused_element
   // ignore_for_file: camel_case_types

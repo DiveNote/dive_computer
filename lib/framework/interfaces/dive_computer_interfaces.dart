@@ -30,6 +30,7 @@ class Interfaces {
     Computer computer,
     ComputerTransport transport,
     ffi.Pointer<dc_descriptor_t> computerDescriptor,
+    BluetoothDevice? device,
     ffi.Pointer<ffi.Pointer<dc_context_t>> context,
   ) {
     switch (transport) {
@@ -40,7 +41,7 @@ class Interfaces {
       case ComputerTransport.usbhid:
         return _connectUsbHid(computerDescriptor);
       case ComputerTransport.ble:
-        return _connectBle(computer, context);
+        return _connectBle(device, context);
       default:
         throw UnimplementedError();
     }
@@ -197,11 +198,9 @@ class Interfaces {
   }
 
   ffi.Pointer<dc_iostream_t> _connectBle(
-    Computer computer,
+    BluetoothDevice? device,
     ffi.Pointer<ffi.Pointer<dc_context_t>> context,
   ) {
-    BluetoothDevice? device = bluetoothDeviceCache.getBluetoothDevice();
-
     handleResult(
         device == null || device.platformName.isEmpty
             ? dc_status_t.DC_STATUS_NODEVICE
