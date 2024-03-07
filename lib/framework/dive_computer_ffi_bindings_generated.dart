@@ -1731,6 +1731,273 @@ class DiveComputerFfiBindings {
   late final _dc_usbhid_open = _dc_usbhid_openPtr.asFunction<
       int Function(ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
           ffi.Pointer<dc_context_t>, ffi.Pointer<dc_usbhid_device_t>)>();
+
+  /// Convert a bluetooth address to a string.
+  ///
+  /// The bluetooth address is formatted as XX:XX:XX:XX:XX:XX, where each
+  /// XX is a hexadecimal number specifying an octet of the 48-bit address.
+  /// The minimum size for the buffer is #DC_BLUETOOTH_SIZE bytes.
+  ///
+  /// @param[in]  address  A bluetooth address.
+  /// @param[in]  str      The memory buffer to store the result.
+  /// @param[in]  size     The size of the memory buffer.
+  /// @returns The null-terminated string on success, or NULL on failure.
+  ffi.Pointer<ffi.Char> dc_bluetooth_addr2str(
+    int address,
+    ffi.Pointer<ffi.Char> str,
+    int size,
+  ) {
+    return _dc_bluetooth_addr2str(
+      address,
+      str,
+      size,
+    );
+  }
+
+  late final _dc_bluetooth_addr2strPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(dc_bluetooth_address_t,
+              ffi.Pointer<ffi.Char>, ffi.Size)>>('dc_bluetooth_addr2str');
+  late final _dc_bluetooth_addr2str = _dc_bluetooth_addr2strPtr.asFunction<
+      ffi.Pointer<ffi.Char> Function(int, ffi.Pointer<ffi.Char>, int)>();
+
+  /// Convert a string to a bluetooth address.
+  ///
+  /// The string is expected to be in the format XX:XX:XX:XX:XX:XX, where
+  /// each XX is a hexadecimal number specifying an octet of the 48-bit
+  /// address.
+  ///
+  /// @param[in]  address  A null-terminated string.
+  /// @returns The bluetooth address on success, or zero on failure.
+  int dc_bluetooth_str2addr(
+    ffi.Pointer<ffi.Char> address,
+  ) {
+    return _dc_bluetooth_str2addr(
+      address,
+    );
+  }
+
+  late final _dc_bluetooth_str2addrPtr = _lookup<
+      ffi.NativeFunction<
+          dc_bluetooth_address_t Function(
+              ffi.Pointer<ffi.Char>)>>('dc_bluetooth_str2addr');
+  late final _dc_bluetooth_str2addr = _dc_bluetooth_str2addrPtr
+      .asFunction<int Function(ffi.Pointer<ffi.Char>)>();
+
+  /// Get the address of the bluetooth device.
+  ///
+  /// @param[in]  device  A valid bluetooth device.
+  int dc_bluetooth_device_get_address(
+    ffi.Pointer<dc_bluetooth_device_t> device,
+  ) {
+    return _dc_bluetooth_device_get_address(
+      device,
+    );
+  }
+
+  late final _dc_bluetooth_device_get_addressPtr = _lookup<
+          ffi.NativeFunction<
+              dc_bluetooth_address_t Function(
+                  ffi.Pointer<dc_bluetooth_device_t>)>>(
+      'dc_bluetooth_device_get_address');
+  late final _dc_bluetooth_device_get_address =
+      _dc_bluetooth_device_get_addressPtr
+          .asFunction<int Function(ffi.Pointer<dc_bluetooth_device_t>)>();
+
+  /// Get the name of the bluetooth device.
+  ///
+  /// @param[in]  device  A valid bluetooth device.
+  ffi.Pointer<ffi.Char> dc_bluetooth_device_get_name(
+    ffi.Pointer<dc_bluetooth_device_t> device,
+  ) {
+    return _dc_bluetooth_device_get_name(
+      device,
+    );
+  }
+
+  late final _dc_bluetooth_device_get_namePtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Pointer<ffi.Char> Function(
+                  ffi.Pointer<dc_bluetooth_device_t>)>>(
+      'dc_bluetooth_device_get_name');
+  late final _dc_bluetooth_device_get_name =
+      _dc_bluetooth_device_get_namePtr.asFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<dc_bluetooth_device_t>)>();
+
+  /// Destroy the bluetooth device and free all resources.
+  ///
+  /// @param[in]  device  A valid bluetooth device.
+  void dc_bluetooth_device_free(
+    ffi.Pointer<dc_bluetooth_device_t> device,
+  ) {
+    return _dc_bluetooth_device_free(
+      device,
+    );
+  }
+
+  late final _dc_bluetooth_device_freePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<dc_bluetooth_device_t>)>>('dc_bluetooth_device_free');
+  late final _dc_bluetooth_device_free = _dc_bluetooth_device_freePtr
+      .asFunction<void Function(ffi.Pointer<dc_bluetooth_device_t>)>();
+
+  /// Create an iterator to enumerate the bluetooth devices.
+  ///
+  /// @param[out] iterator    A location to store the iterator.
+  /// @param[in]  context     A valid context object.
+  /// @param[in]  descriptor  A valid device descriptor or NULL.
+  /// @returns #DC_STATUS_SUCCESS on success, or another #dc_status_t code
+  /// on failure.
+  int dc_bluetooth_iterator_new(
+    ffi.Pointer<ffi.Pointer<dc_iterator_t>> iterator,
+    ffi.Pointer<dc_context_t> context,
+    ffi.Pointer<dc_descriptor_t> descriptor,
+  ) {
+    return _dc_bluetooth_iterator_new(
+      iterator,
+      context,
+      descriptor,
+    );
+  }
+
+  late final _dc_bluetooth_iterator_newPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Pointer<dc_iterator_t>>,
+              ffi.Pointer<dc_context_t>,
+              ffi.Pointer<dc_descriptor_t>)>>('dc_bluetooth_iterator_new');
+  late final _dc_bluetooth_iterator_new =
+      _dc_bluetooth_iterator_newPtr.asFunction<
+          int Function(ffi.Pointer<ffi.Pointer<dc_iterator_t>>,
+              ffi.Pointer<dc_context_t>, ffi.Pointer<dc_descriptor_t>)>();
+
+  /// Open an bluetooth connection.
+  ///
+  /// @param[out]  iostream   A location to store the bluetooth connection.
+  /// @param[in]   context    A valid context object.
+  /// @param[in]   address    The bluetooth device address.
+  /// @param[in]   port       The bluetooth port number.
+  /// @returns #DC_STATUS_SUCCESS on success, or another #dc_status_t code
+  /// on failure.
+  int dc_bluetooth_open(
+    ffi.Pointer<ffi.Pointer<dc_iostream_t>> iostream,
+    ffi.Pointer<dc_context_t> context,
+    int address,
+    int port,
+  ) {
+    return _dc_bluetooth_open(
+      iostream,
+      context,
+      address,
+      port,
+    );
+  }
+
+  late final _dc_bluetooth_openPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
+              ffi.Pointer<dc_context_t>,
+              dc_bluetooth_address_t,
+              ffi.UnsignedInt)>>('dc_bluetooth_open');
+  late final _dc_bluetooth_open = _dc_bluetooth_openPtr.asFunction<
+      int Function(ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
+          ffi.Pointer<dc_context_t>, int, int)>();
+
+  /// Create a custom I/O stream.
+  ///
+  /// @param[out]  iostream   A location to store the custom I/O stream.
+  /// @param[in]   context    A valid context object.
+  /// @param[in]   callbacks  The callback functions to call.
+  /// @param[in]   userdata   User data to pass to the callback functions.
+  /// @returns #DC_STATUS_SUCCESS on success, or another #dc_status_t code
+  /// on failure.
+  int dc_custom_open(
+    ffi.Pointer<ffi.Pointer<dc_iostream_t>> iostream,
+    ffi.Pointer<dc_context_t> context,
+    int transport,
+    ffi.Pointer<dc_custom_cbs_t> callbacks,
+    ffi.Pointer<ffi.Void> userdata,
+  ) {
+    return _dc_custom_open(
+      iostream,
+      context,
+      transport,
+      callbacks,
+      userdata,
+    );
+  }
+
+  late final _dc_custom_openPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
+              ffi.Pointer<dc_context_t>,
+              ffi.Int32,
+              ffi.Pointer<dc_custom_cbs_t>,
+              ffi.Pointer<ffi.Void>)>>('dc_custom_open');
+  late final _dc_custom_open = _dc_custom_openPtr.asFunction<
+      int Function(
+          ffi.Pointer<ffi.Pointer<dc_iostream_t>>,
+          ffi.Pointer<dc_context_t>,
+          int,
+          ffi.Pointer<dc_custom_cbs_t>,
+          ffi.Pointer<ffi.Void>)>();
+
+  ffi.Pointer<dc_iostream_t> dc_iostream_allocate(
+    ffi.Pointer<dc_context_t> context,
+    ffi.Pointer<dc_iostream_vtable_t> vtable,
+    int transport,
+  ) {
+    return _dc_iostream_allocate(
+      context,
+      vtable,
+      transport,
+    );
+  }
+
+  late final _dc_iostream_allocatePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<dc_iostream_t> Function(
+              ffi.Pointer<dc_context_t>,
+              ffi.Pointer<dc_iostream_vtable_t>,
+              ffi.Int32)>>('dc_iostream_allocate');
+  late final _dc_iostream_allocate = _dc_iostream_allocatePtr.asFunction<
+      ffi.Pointer<dc_iostream_t> Function(
+          ffi.Pointer<dc_context_t>, ffi.Pointer<dc_iostream_vtable_t>, int)>();
+
+  void dc_iostream_deallocate(
+    ffi.Pointer<dc_iostream_t> iostream,
+  ) {
+    return _dc_iostream_deallocate(
+      iostream,
+    );
+  }
+
+  late final _dc_iostream_deallocatePtr = _lookup<
+          ffi.NativeFunction<ffi.Void Function(ffi.Pointer<dc_iostream_t>)>>(
+      'dc_iostream_deallocate');
+  late final _dc_iostream_deallocate = _dc_iostream_deallocatePtr
+      .asFunction<void Function(ffi.Pointer<dc_iostream_t>)>();
+
+  int dc_iostream_isinstance(
+    ffi.Pointer<dc_iostream_t> iostream,
+    ffi.Pointer<dc_iostream_vtable_t> vtable,
+  ) {
+    return _dc_iostream_isinstance(
+      iostream,
+      vtable,
+    );
+  }
+
+  late final _dc_iostream_isinstancePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<dc_iostream_t>,
+              ffi.Pointer<dc_iostream_vtable_t>)>>('dc_iostream_isinstance');
+  late final _dc_iostream_isinstance = _dc_iostream_isinstancePtr.asFunction<
+      int Function(
+          ffi.Pointer<dc_iostream_t>, ffi.Pointer<dc_iostream_vtable_t>)>();
 }
 
 abstract class dc_status_t {
@@ -1867,16 +2134,23 @@ abstract class dc_loglevel_t {
   static const int DC_LOGLEVEL_ALL = 5;
 }
 
-typedef dc_logfunc_t = ffi.Pointer<
-    ffi.NativeFunction<
-        ffi.Void Function(
-            ffi.Pointer<dc_context_t> context,
-            ffi.Int32 loglevel,
-            ffi.Pointer<ffi.Char> file,
-            ffi.UnsignedInt line,
-            ffi.Pointer<ffi.Char> function,
-            ffi.Pointer<ffi.Char> message,
-            ffi.Pointer<ffi.Void> userdata)>>;
+typedef dc_logfunc_t = ffi.Pointer<ffi.NativeFunction<dc_logfunc_tFunction>>;
+typedef dc_logfunc_tFunction = ffi.Void Function(
+    ffi.Pointer<dc_context_t> context,
+    ffi.Int32 loglevel,
+    ffi.Pointer<ffi.Char> file,
+    ffi.UnsignedInt line,
+    ffi.Pointer<ffi.Char> function,
+    ffi.Pointer<ffi.Char> message,
+    ffi.Pointer<ffi.Void> userdata);
+typedef Dartdc_logfunc_tFunction = void Function(
+    ffi.Pointer<dc_context_t> context,
+    int loglevel,
+    ffi.Pointer<ffi.Char> file,
+    int line,
+    ffi.Pointer<ffi.Char> function,
+    ffi.Pointer<ffi.Char> message,
+    ffi.Pointer<ffi.Void> userdata);
 
 final class dc_iterator_t extends ffi.Opaque {}
 
@@ -1979,7 +2253,110 @@ final class _opaque_pthread_t extends ffi.Struct {
   external ffi.Array<ffi.Char> __opaque;
 }
 
-final class dc_iostream_t extends ffi.Opaque {}
+final class dc_iostream_t extends ffi.Struct {
+  external ffi.Pointer<dc_iostream_vtable_t> vtable;
+
+  external ffi.Pointer<dc_context_t> context;
+
+  @ffi.Int32()
+  external int transport;
+}
+
+final class dc_iostream_vtable_t extends ffi.Struct {
+  @ffi.Size()
+  external int size;
+
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  ffi.Pointer<dc_iostream_t> iostream, ffi.Int timeout)>>
+      set_timeout;
+
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  ffi.Pointer<dc_iostream_t> iostream, ffi.UnsignedInt value)>>
+      set_break;
+
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  ffi.Pointer<dc_iostream_t> iostream, ffi.UnsignedInt value)>>
+      set_dtr;
+
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  ffi.Pointer<dc_iostream_t> iostream, ffi.UnsignedInt value)>>
+      set_rts;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(ffi.Pointer<dc_iostream_t> iostream,
+              ffi.Pointer<ffi.UnsignedInt> value)>> get_lines;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(ffi.Pointer<dc_iostream_t> iostream,
+              ffi.Pointer<ffi.Size> value)>> get_available;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<dc_iostream_t> iostream,
+              ffi.UnsignedInt baudrate,
+              ffi.UnsignedInt databits,
+              ffi.Int32 parity,
+              ffi.Int32 stopbits,
+              ffi.Int32 flowcontrol)>> configure;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<dc_iostream_t> iostream, ffi.Int timeout)>> poll;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<dc_iostream_t> iostream,
+              ffi.Pointer<ffi.Void> data,
+              ffi.Size size,
+              ffi.Pointer<ffi.Size> actual)>> read;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<dc_iostream_t> iostream,
+              ffi.Pointer<ffi.Void> data,
+              ffi.Size size,
+              ffi.Pointer<ffi.Size> actual)>> write;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<dc_iostream_t> iostream,
+              ffi.UnsignedInt request,
+              ffi.Pointer<ffi.Void> data,
+              ffi.Size size)>> ioctl;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(ffi.Pointer<dc_iostream_t> iostream)>> flush;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<dc_iostream_t> iostream, ffi.Int32 direction)>> purge;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(ffi.Pointer<dc_iostream_t> iostream,
+              ffi.UnsignedInt milliseconds)>> sleep;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(ffi.Pointer<dc_iostream_t> iostream)>> close;
+}
 
 /// The parity checking scheme.
 abstract class dc_parity_t {
@@ -2076,6 +2453,7 @@ final class dc_datetime_t extends ffi.Struct {
 }
 
 typedef dc_ticks_t = ffi.LongLong;
+typedef Dartdc_ticks_t = int;
 
 abstract class dc_event_type_t {
   static const int DC_EVENT_WAITING = 1;
@@ -2121,20 +2499,38 @@ final class dc_event_vendor_t extends ffi.Struct {
   external int size;
 }
 
-typedef dc_cancel_callback_t = ffi.Pointer<
-    ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void> userdata)>>;
-typedef dc_event_callback_t = ffi.Pointer<
-    ffi.NativeFunction<
-        ffi.Void Function(ffi.Pointer<dc_device_t> device, ffi.Int32 event,
-            ffi.Pointer<ffi.Void> data, ffi.Pointer<ffi.Void> userdata)>>;
-typedef dc_dive_callback_t = ffi.Pointer<
-    ffi.NativeFunction<
-        ffi.Int Function(
-            ffi.Pointer<ffi.UnsignedChar> data,
-            ffi.UnsignedInt size,
-            ffi.Pointer<ffi.UnsignedChar> fingerprint,
-            ffi.UnsignedInt fsize,
-            ffi.Pointer<ffi.Void> userdata)>>;
+typedef dc_cancel_callback_t
+    = ffi.Pointer<ffi.NativeFunction<dc_cancel_callback_tFunction>>;
+typedef dc_cancel_callback_tFunction = ffi.Int Function(
+    ffi.Pointer<ffi.Void> userdata);
+typedef Dartdc_cancel_callback_tFunction = int Function(
+    ffi.Pointer<ffi.Void> userdata);
+typedef dc_event_callback_t
+    = ffi.Pointer<ffi.NativeFunction<dc_event_callback_tFunction>>;
+typedef dc_event_callback_tFunction = ffi.Void Function(
+    ffi.Pointer<dc_device_t> device,
+    ffi.Int32 event,
+    ffi.Pointer<ffi.Void> data,
+    ffi.Pointer<ffi.Void> userdata);
+typedef Dartdc_event_callback_tFunction = void Function(
+    ffi.Pointer<dc_device_t> device,
+    int event,
+    ffi.Pointer<ffi.Void> data,
+    ffi.Pointer<ffi.Void> userdata);
+typedef dc_dive_callback_t
+    = ffi.Pointer<ffi.NativeFunction<dc_dive_callback_tFunction>>;
+typedef dc_dive_callback_tFunction = ffi.Int Function(
+    ffi.Pointer<ffi.UnsignedChar> data,
+    ffi.UnsignedInt size,
+    ffi.Pointer<ffi.UnsignedChar> fingerprint,
+    ffi.UnsignedInt fsize,
+    ffi.Pointer<ffi.Void> userdata);
+typedef Dartdc_dive_callback_tFunction = int Function(
+    ffi.Pointer<ffi.UnsignedChar> data,
+    int size,
+    ffi.Pointer<ffi.UnsignedChar> fingerprint,
+    int fsize,
+    ffi.Pointer<ffi.Void> userdata);
 
 final class dc_serial_device_t extends ffi.Opaque {}
 
@@ -2473,10 +2869,12 @@ final class UnnamedStruct6 extends ffi.Struct {
 
 final class dc_parser_t extends ffi.Opaque {}
 
-typedef dc_sample_callback_t = ffi.Pointer<
-    ffi.NativeFunction<
-        ffi.Void Function(ffi.Int32 type, ffi.Pointer<dc_sample_value_t> value,
-            ffi.Pointer<ffi.Void> userdata)>>;
+typedef dc_sample_callback_t
+    = ffi.Pointer<ffi.NativeFunction<dc_sample_callback_tFunction>>;
+typedef dc_sample_callback_tFunction = ffi.Void Function(ffi.Int32 type,
+    ffi.Pointer<dc_sample_value_t> value, ffi.Pointer<ffi.Void> userdata);
+typedef Dartdc_sample_callback_tFunction = void Function(int type,
+    ffi.Pointer<dc_sample_value_t> value, ffi.Pointer<ffi.Void> userdata);
 
 /// USB control transfer.
 final class dc_usb_control_t extends ffi.Struct {
@@ -2539,6 +2937,104 @@ final class dc_usbhid_desc_t extends ffi.Struct {
 }
 
 final class dc_usbhid_device_t extends ffi.Opaque {}
+
+typedef dc_bluetooth_address_t = ffi.UnsignedLongLong;
+typedef Dartdc_bluetooth_address_t = int;
+
+final class dc_bluetooth_device_t extends ffi.Opaque {}
+
+final class dc_custom_cbs_t extends ffi.Struct {
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Void> userdata, ffi.Int timeout)>> set_timeout;
+
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  ffi.Pointer<ffi.Void> userdata, ffi.UnsignedInt value)>>
+      set_break;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Void> userdata, ffi.UnsignedInt value)>> set_dtr;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Void> userdata, ffi.UnsignedInt value)>> set_rts;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(ffi.Pointer<ffi.Void> userdata,
+              ffi.Pointer<ffi.UnsignedInt> value)>> get_lines;
+
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  ffi.Pointer<ffi.Void> userdata, ffi.Pointer<ffi.Size> value)>>
+      get_available;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Void> userdata,
+              ffi.UnsignedInt baudrate,
+              ffi.UnsignedInt databits,
+              ffi.Int32 parity,
+              ffi.Int32 stopbits,
+              ffi.Int32 flowcontrol)>> configure;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Void> userdata, ffi.Int timeout)>> poll;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Void> userdata,
+              ffi.Pointer<ffi.Void> data,
+              ffi.Size size,
+              ffi.Pointer<ffi.Size> actual)>> read;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Void> userdata,
+              ffi.Pointer<ffi.Void> data,
+              ffi.Size size,
+              ffi.Pointer<ffi.Size> actual)>> write;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Void> userdata,
+              ffi.UnsignedInt request,
+              ffi.Pointer<ffi.Void> data,
+              ffi.Size size)>> ioctl;
+
+  external ffi.Pointer<
+          ffi
+          .NativeFunction<ffi.Int32 Function(ffi.Pointer<ffi.Void> userdata)>>
+      flush;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ffi.Void> userdata, ffi.Int32 direction)>> purge;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int32 Function(ffi.Pointer<ffi.Void> userdata,
+              ffi.UnsignedInt milliseconds)>> sleep;
+
+  external ffi.Pointer<
+          ffi
+          .NativeFunction<ffi.Int32 Function(ffi.Pointer<ffi.Void> userdata)>>
+      close;
+}
 
 const int __DARWIN_ONLY_64_BIT_INO_T = 1;
 
@@ -2863,3 +3359,7 @@ const int DC_GASMIX_UNKNOWN = 4294967295;
 const int DC_IOCTL_USB_CONTROL_READ = 1073771776;
 
 const int DC_IOCTL_USB_CONTROL_WRITE = 2147513600;
+
+const int DC_IOCTL_BLE_GET_NAME = 1073766912;
+
+const int DC_BLUETOOTH_SIZE = 18;

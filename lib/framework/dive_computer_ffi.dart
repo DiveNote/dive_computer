@@ -2,16 +2,16 @@ import 'dart:developer' as developer;
 import 'dart:ffi' as ffi;
 import 'dart:io';
 
-import 'package:dive_computer/framework/interfaces/dive_computer_interfaces.dart';
-import 'package:dive_computer/framework/utils/transports_bitmask.dart';
-import 'package:dive_computer/framework/utils/utils.dart';
-import 'package:dive_computer/types/computer.dart';
-import 'package:dive_computer/types/dive.dart';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart' as logging;
 
+import './interfaces/dive_computer_interfaces.dart';
 import './dive_computer_ffi_bindings_generated.dart';
+import './utils/transports_bitmask.dart';
+import './utils/utils.dart';
+import '../types/computer.dart';
+import '../types/dive.dart';
 
 final log = logging.Logger('DiveComputerFfi');
 
@@ -51,6 +51,10 @@ class DiveComputerFfi {
     _library = ffi.DynamicLibrary.open(fileName);
     _bindings = DiveComputerFfiBindings(_library);
     log.fine('Loading complete');
+  }
+
+  void dispose() {
+    _interfaces.dispose();
   }
 
   static final context = calloc<ffi.Pointer<dc_context_t>>();
@@ -155,7 +159,7 @@ class DiveComputerFfi {
     final computerDescriptor = _computerDescriptorCache[computer]!;
 
     final ffi.Pointer<dc_iostream_t> iostream =
-        _interfaces.connect(transport, computerDescriptor);
+        _interfaces.connect(computer, transport, computerDescriptor, context);
 
     final device = calloc<ffi.Pointer<dc_device_t>>();
     try {
