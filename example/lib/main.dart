@@ -1,18 +1,27 @@
 import 'dart:io';
 
+import 'package:dive_computer/framework/interfaces/ble_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:dive_computer/dive_computer.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 
-import './bluetooth_provider.dart';
+//import './bluetooth_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (await FlutterBluePlus.isSupported == false) {
+    log.fine('Bluetooth not supported by this device');
+    return;
+  }
+
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => BluetoothProvider(),
-      child: const MyApp(),
-    ),
+    //ChangeNotifierProvider(
+    //  create: (context) => BluetoothProvider(),
+    //  child: const MyApp(),
+    //),
+    const MyApp(),
   );
 }
 
@@ -24,15 +33,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Future<void> _bleDevices;
   final dc = DiveComputer.instance;
 
+  late final Future<List<BleDevice>> _bleDevices;
   late final Future<List<Computer>> supportedComputers;
 
   @override
   void initState() {
-    _bleDevices =
-        Provider.of<BluetoothProvider>(context, listen: false).scanForDevices();
+    _bleDevices = dc.fetchBleDevices();
 
     dc.enableDebugLogging();
     dc.openConnection();
@@ -45,10 +53,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     dc.closeConnection();
-    for (var device in FlutterBluePlus.connectedDevices) {
-      device.disconnect();
-    }
-
     super.dispose();
   }
 
@@ -102,7 +106,6 @@ class _MyAppState extends State<MyApp> {
                           final dives = await dc.download(
                             computer,
                             computer.transports.first,
-                            null,
                             "exampleFingerprint",
                           );
                           // ignore: use_build_context_synchronously
@@ -128,9 +131,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   _mobile() {
-    return FutureBuilder(
-      future: Future.wait([_bleDevices, supportedComputers]),
-      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+    return FutureBuilder<List<BleDevice>>(
+      future: _bleDevices,
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -143,113 +146,138 @@ class _MyAppState extends State<MyApp> {
               ),
             );
           } else {
-            return Consumer<BluetoothProvider>(
-              builder: (context, bluetoothProvider, child) {
-                return RefreshIndicator(
-                  onRefresh: bluetoothProvider.scanForDevices,
-                  child: ListView(
-                    children: [
-                      ...bluetoothProvider.systemDevices.map(
-                        (device) => DiveComputerTile(
-                          diveComputerName: device.platformName,
-                          isNewDC: false,
-                          onPressed: () async {
-                            // First, check if connection to device has been established
-                            if (!FlutterBluePlus.connectedDevices
-                                .contains(device)) {
-                              device.connectionState
-                                  .listen((BluetoothConnectionState state) {
-                                print('Connection state: $state');
-                              });
-
-                              await device.connect();
-                            }
-
-                            // Check if device is supported by dive_computer and device supports ble
-                            final computers =
-                                snapshot.data![1] as List<Computer>;
-                            Computer? computer;
-                            for (var c in computers) {
-                              if (device.platformName.contains(c.product)) {
-                                computer = c;
-                                break;
-                              }
-                            }
-
-                            if (computer == null) {
-                              print('${device.platformName} not supported');
-                              return;
-                            }
-
-                            ComputerTransport? transport;
-                            if (computer.transports
-                                .contains(ComputerTransport.ble)) {
-                              // flutter_blue_plus supports only BLE, not Bluetooth
-                              transport = ComputerTransport.ble;
-                            }
-
-                            if (transport == null) {
-                              print(
-                                  'No BLE or Bluetooth support for ${device.platformName}');
-                              return;
-                            }
-
-                            // subsurface BLE/Bluetooth import process
-                            // run, downloadfromdcthread.cpp line 87
-                            //    1. get dc_descriptor_t for device <- downloadfromdcthread.cpp line 90 <- LIBDIVECOMPUTER
-                            //    2. do_libdivecomputer_import <- downloadfromdcthread.cpp line 117
-                            //        a. dc_context_new, libdivecompute.c line 1512 <- LIBDIVECOMPUTER
-                            //        b. divecomputer_device_open, libdivecompute.c line 1525
-                            //            BT: (most likely not supported with iOS and definitly not supported by flutter_blue_plus)
-                            //              I. rfcomm_stream_open, libdivecompute.c line 1420
-                            //            BLE:
-                            //              I. ble_packet_open, libdivecompute.c line 1432
-                            //                a. qt_ble_open, qtserialbluetooth.cpp line 303
-                            //                    1. connectToDevice, qt-ble.cpp line 585
-                            //                    2. discoverServices, qt-ble.cpp line 630
-                            //                    3. select_preferred_service, qt-ble.cpp line 638 <- The service which is providing read and write access
-                            //                    4. get ClientCharacteristicConfiguration descriptor and write 0x0100 to enable notifications, qt-ble.cpp line 658-677
-                            //                    5. assign BLEObject to iostream, qt-ble.cpp line 689
-                            //                b. dc_custom_open, qtserialbluetooth.cpp line 308  <- LIBDIVECOMPUTER
-                            //                    1. dc_iostream_allocate, custom.c line 84 <- LIBDIVECOMPUTER
-
-                            // From here the process is the same as for other transports
-                            //        c. dc_device_open, libdivecompute.c line 1531 <- LIBDIVECOMPUTER
-                            //        d. do_device_import, libdivecomputer.c line 1541
-                            //            I. dc_device_set_events, libdivecomputer.c line 1178 <- LIBDIVECOMPUTER
-                            //            II. dc_device_set_cancel, libdivecomputer.c line 1183 <- LIBDIVECOMPUTER
-                            //            III. in case no dump dc_device_foreach, libdivecomputer.c line 1210 <- LIBDIVECOMPUTER
-
-                            // Download dives from device
-                            final dives = await dc.download(
-                              computer,
-                              transport,
-                              device,
-                              "exampleFingerprint",
-                            );
-
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content:
-                                    Text('Downloaded ${dives.length} dives'),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      ...bluetoothProvider.scanResults.map(
-                        (result) => DiveComputerTile(
-                          diveComputerName: result.device.platformName,
-                          isNewDC: true,
-                          onPressed: () => result.device.connect(),
-                        ),
-                      ),
-                    ],
-                  ),
+            final bleDevices = snapshot.data![0] as List<BleDevice>;
+            return ListView.builder(
+              itemCount: bleDevices.length,
+              itemBuilder: (context, index) {
+                final device = bleDevices[index];
+                return ListTile(
+                  title: Text(device.advertisementName),
+                  onTap: () async {
+                    // final dives = await dc.download(
+                    //   snapshot.data![1][0] as Computer,
+                    //   ComputerTransport.ble,
+                    //   device,
+                    //   "exampleFingerprint",
+                    // );
+                    // ignore: use_build_context_synchronously
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     content: Text('Downloaded ${dives.length} dives'),
+                    //   ),
+                    // );
+                  },
                 );
               },
             );
+
+            // return Consumer<BluetoothProvider>(
+            //   builder: (context, bluetoothProvider, child) {
+            //     return RefreshIndicator(
+            //       onRefresh: bluetoothProvider.scanForDevices,
+            //       child: ListView(
+            //         children: [
+            //           ...bluetoothProvider.systemDevices.map(
+            //             (device) => DiveComputerTile(
+            //               diveComputerName: device.platformName,
+            //               isNewDC: false,
+            //               onPressed: () async {
+            //                 // First, check if connection to device has been established
+            //                 if (!FlutterBluePlus.connectedDevices
+            //                     .contains(device)) {
+            //                   device.connectionState
+            //                       .listen((BluetoothConnectionState state) {
+            //                     print('Connection state: $state');
+            //                   });
+
+            //                   await device.connect();
+            //                 }
+
+            //                 // Check if device is supported by dive_computer and device supports ble
+            //                 final computers =
+            //                     snapshot.data![1] as List<Computer>;
+            //                 Computer? computer;
+            //                 for (var c in computers) {
+            //                   if (device.platformName.contains(c.product)) {
+            //                     computer = c;
+            //                     break;
+            //                   }
+            //                 }
+
+            //                 if (computer == null) {
+            //                   print('${device.platformName} not supported');
+            //                   return;
+            //                 }
+
+            //                 ComputerTransport? transport;
+            //                 if (computer.transports
+            //                     .contains(ComputerTransport.ble)) {
+            //                   // flutter_blue_plus supports only BLE, not Bluetooth
+            //                   transport = ComputerTransport.ble;
+            //                 }
+
+            //                 if (transport == null) {
+            //                   print(
+            //                       'No BLE or Bluetooth support for ${device.platformName}');
+            //                   return;
+            //                 }
+
+            //                 // subsurface BLE/Bluetooth import process
+            //                 // run, downloadfromdcthread.cpp line 87
+            //                 //    1. get dc_descriptor_t for device <- downloadfromdcthread.cpp line 90 <- LIBDIVECOMPUTER
+            //                 //    2. do_libdivecomputer_import <- downloadfromdcthread.cpp line 117
+            //                 //        a. dc_context_new, libdivecompute.c line 1512 <- LIBDIVECOMPUTER
+            //                 //        b. divecomputer_device_open, libdivecompute.c line 1525
+            //                 //            BT: (most likely not supported with iOS and definitly not supported by flutter_blue_plus)
+            //                 //              I. rfcomm_stream_open, libdivecompute.c line 1420
+            //                 //            BLE:
+            //                 //              I. ble_packet_open, libdivecompute.c line 1432
+            //                 //                a. qt_ble_open, qtserialbluetooth.cpp line 303
+            //                 //                    1. connectToDevice, qt-ble.cpp line 585
+            //                 //                    2. discoverServices, qt-ble.cpp line 630
+            //                 //                    3. select_preferred_service, qt-ble.cpp line 638 <- The service which is providing read and write access
+            //                 //                    4. get ClientCharacteristicConfiguration descriptor and write 0x0100 to enable notifications, qt-ble.cpp line 658-677
+            //                 //                    5. assign BLEObject to iostream, qt-ble.cpp line 689
+            //                 //                b. dc_custom_open, qtserialbluetooth.cpp line 308  <- LIBDIVECOMPUTER
+            //                 //                    1. dc_iostream_allocate, custom.c line 84 <- LIBDIVECOMPUTER
+
+            //                 // From here the process is the same as for other transports
+            //                 //        c. dc_device_open, libdivecompute.c line 1531 <- LIBDIVECOMPUTER
+            //                 //        d. do_device_import, libdivecomputer.c line 1541
+            //                 //            I. dc_device_set_events, libdivecomputer.c line 1178 <- LIBDIVECOMPUTER
+            //                 //            II. dc_device_set_cancel, libdivecomputer.c line 1183 <- LIBDIVECOMPUTER
+            //                 //            III. in case no dump dc_device_foreach, libdivecomputer.c line 1210 <- LIBDIVECOMPUTER
+
+            //                 // Download dives from device
+            //                 final dives = await dc.download(
+            //                   computer,
+            //                   transport,
+            //                   device,
+            //                   "exampleFingerprint",
+            //                 );
+
+            //                 // ignore: use_build_context_synchronously
+            //                 ScaffoldMessenger.of(context).showSnackBar(
+            //                   SnackBar(
+            //                     content:
+            //                         Text('Downloaded ${dives.length} dives'),
+            //                   ),
+            //                 );
+            //               },
+            //             ),
+            //           ),
+            //           ...bluetoothProvider.scanResults.map(
+            //             (result) => DiveComputerTile(
+            //               diveComputerName: result.device.platformName,
+            //               isNewDC: true,
+            //               onPressed: () => result.device.connect(),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     );
+            //   },
+            // );
           }
         }
       },

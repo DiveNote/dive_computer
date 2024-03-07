@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:logging/logging.dart' as logging;
 
 import './interfaces/dive_computer_interfaces.dart';
@@ -154,14 +153,13 @@ class DiveComputerFfi {
 
   static void download(
     Computer computer,
-    ComputerTransport transport,
-    BluetoothDevice? bluetoothDevice, [
+    ComputerTransport transport, [
     String? lastFingerprint,
   ]) {
     final computerDescriptor = _computerDescriptorCache[computer]!;
 
-    final ffi.Pointer<dc_iostream_t> iostream = _interfaces.connect(
-        computer, transport, computerDescriptor, bluetoothDevice, context);
+    final ffi.Pointer<dc_iostream_t> iostream =
+        _interfaces.connect(computer, transport, computerDescriptor, context);
 
     final device = calloc<ffi.Pointer<dc_device_t>>();
     try {

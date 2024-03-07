@@ -1,6 +1,6 @@
+import 'package:dive_computer/framework/interfaces/ble_interface.dart';
 import 'package:dive_computer/types/computer.dart';
 import 'package:dive_computer/types/dive.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 abstract class DiveComputerInterface {
   void openConnection() {
@@ -19,10 +19,13 @@ abstract class DiveComputerInterface {
 
   Future<List<Dive>> download(
     Computer computer,
-    ComputerTransport transport,
-    BluetoothDevice? device, [
+    ComputerTransport transport, [
     String? lastFingerprint,
   ]) {
+    throw UnimplementedError();
+  }
+
+  Future<List<BleDevice>> fetchBleDevices() {
     throw UnimplementedError();
   }
 }
