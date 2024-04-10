@@ -1,12 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:isolate';
 import 'dart:developer' as developer;
 
 import 'package:dive_computer/framework/dive_computer_interface.dart';
 import 'package:dive_computer/framework/dive_computer_ffi.dart';
+import 'package:dive_computer/framework/interfaces/ble_interface.dart';
 import 'package:dive_computer/types/computer.dart';
 import 'package:dive_computer/types/dive.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:logging/logging.dart';
 
 enum DiveComputerMethod {
@@ -15,6 +18,7 @@ enum DiveComputerMethod {
   enableDebugLogging,
   supportedComputers,
   download,
+  fetchBleDevices,
 }
 
 typedef IsolateMessage = (DiveComputerMethod method, List<dynamic> args);
@@ -28,6 +32,7 @@ class DiveComputer implements DiveComputerInterface {
 
   Completer<List<Computer>>? _supportedComputers;
   Completer<List<Dive>>? _downloadedDives;
+  Completer<List<BleDevice>>? _bleDevices;
 
   DiveComputer._() {
     _receivePort = ReceivePort();
@@ -46,6 +51,8 @@ class DiveComputer implements DiveComputerInterface {
         _supportedComputers?.complete(message);
       } else if (message is List<Dive>) {
         _downloadedDives?.complete(message);
+      } else if (message is List<BleDevice>) {
+        _bleDevices?.complete(message);
       } else if (message is Error || message is Exception) {
         if (_supportedComputers?.isCompleted == false) {
           _supportedComputers?.completeError(message);
@@ -97,17 +104,27 @@ class DiveComputer implements DiveComputerInterface {
     ));
     return (_downloadedDives = Completer()).future;
   }
+
+  @override
+  Future<List<BleDevice>> fetchBleDevices() async {
+    await _send((DiveComputerMethod.fetchBleDevices, []));
+    return (_bleDevices = Completer()).future;
+  }
 }
 
 _spawnIsolate(SendPort sendPort) {
   developer.log(
-    'Spawning DiveComputerFfi in an Isolate',
+    'Spawning DiveComputerFfi and BleInterface in an Isolate',
     name: 'DiveComputerIsolate',
   );
 
   Object? initializationError;
   try {
     DiveComputerFfi.initialize();
+
+    if (Platform.isAndroid || Platform.isIOS) {
+      BleInterface.initialize();
+    }
   } catch (e) {
     initializationError = e;
   }
@@ -126,6 +143,7 @@ _spawnIsolate(SendPort sendPort) {
           break;
         case DiveComputerMethod.enableDebugLogging:
           DiveComputerFfi.enableDebugLogging(Level.FINEST);
+          BleInterface.enableDebugLogging(Level.FINEST);
           break;
         case DiveComputerMethod.supportedComputers:
           final computers = DiveComputerFfi.supportedComputers;
@@ -134,11 +152,19 @@ _spawnIsolate(SendPort sendPort) {
         case DiveComputerMethod.download:
           final computer = message.$2[0] as Computer;
           final transport = message.$2[1] as ComputerTransport;
-          final lastFingerprint = message.$2[2] as String?;
+          final lastFingerprint = message.$2[3] as String?;
           DiveComputerFfi.divesCallback = (dives) {
             sendPort.send(dives);
           };
-          DiveComputerFfi.download(computer, transport, lastFingerprint);
+          DiveComputerFfi.download(
+            computer,
+            transport,
+            lastFingerprint,
+          );
+          break;
+        case DiveComputerMethod.fetchBleDevices:
+          final devices = BleInterface.fetchDevices();
+          sendPort.send(devices);
           break;
         default:
           throw UnimplementedError('Message not implemented: $message');

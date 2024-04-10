@@ -1,8 +1,12 @@
 class Computer {
-  Computer(this.vendor, this.product, {this.transports = const []});
-
   final String vendor, product;
   final List<ComputerTransport> transports;
+
+  Computer(
+    this.vendor,
+    this.product, {
+    this.transports = const [],
+  });
 
   @override
   String toString() =>

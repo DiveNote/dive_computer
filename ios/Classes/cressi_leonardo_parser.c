@@ -1,0 +1,2 @@
+#include "config.h"
+#include "../../src/libdivecomputer/src/cressi_leonardo_parser.c"
